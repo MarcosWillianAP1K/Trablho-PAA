@@ -1,5 +1,7 @@
 import random
 
+
+
 def gerar_numeros_e_salvar(quantidade):
     """
     Gera e salva três arquivos de texto com números:
@@ -45,6 +47,35 @@ def gerar_numeros_e_salvar(quantidade):
     print("\nTodos os três arquivos foram gerados com sucesso!")
 
 
+def ler_numeros_do_arquivo(nome_arquivo):
+    """
+    Lê números de um arquivo de texto, um por linha, e retorna uma lista de inteiros.
+    
+    Args:
+        nome_arquivo (str): O nome do arquivo a ser lido.
+
+    Returns:
+        list: Uma lista de inteiros com os números do arquivo, ou uma lista vazia se houver um erro.
+    """
+    numeros_lidos = []
+    try:
+        with open(nome_arquivo, 'r') as arquivo:
+            for linha in arquivo:
+                # Remove espaços em branco e quebras de linha, e converte para inteiro
+                numeros_lidos.append(int(linha.strip()))
+        print(f"Arquivo '{nome_arquivo}' lido com sucesso.")
+        return numeros_lidos
+    except FileNotFoundError:
+        print(f"Erro: O arquivo '{nome_arquivo}' não foi encontrado.")
+        return []
+    except ValueError:
+        print(f"Erro: O arquivo '{nome_arquivo}' contém dados inválidos (não são números).")
+        return []
 
 
 
+if __name__ == "__main__":
+
+    lista = ler_numeros_do_arquivo('Arquivos_testes/crescentes_100.txt')
+
+    print("Números lidos do arquivo:", lista)
