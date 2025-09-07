@@ -15,5 +15,5 @@ class Cronometro:
         self.tempo_inicial = 0.0
         self.tempo_total = 0.0
 
-    def tempo_decorrido(self):
+    def tempo_milisegundos(self):
         return self.tempo_total * 1000

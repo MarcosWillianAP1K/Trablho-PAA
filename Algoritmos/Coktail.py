@@ -32,6 +32,8 @@ def cocktail_sort(lista:list[int]):
 
         # Move o 'início' um passo para frente
         inicio = inicio + 1
+        
+    return lista
 
 # Exemplo de uso
 # if __name__ == '__main__':
