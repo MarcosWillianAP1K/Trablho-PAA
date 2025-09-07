@@ -2,7 +2,7 @@ import random
 
 
 
-def gerar_numeros_e_salvar(quantidade):
+def gerar_numeros_e_salvar(quantidade:int):
     """
     Gera e salva três arquivos de texto com números:
     - um com números crescentes
@@ -47,7 +47,7 @@ def gerar_numeros_e_salvar(quantidade):
     print("\nTodos os três arquivos foram gerados com sucesso!")
 
 
-def ler_numeros_do_arquivo(nome_arquivo):
+def ler_numeros_do_arquivo(nome_arquivo:str):
     """
     Lê números de um arquivo de texto, um por linha, e retorna uma lista de inteiros.
     
@@ -72,6 +72,21 @@ def ler_numeros_do_arquivo(nome_arquivo):
         print(f"Erro: O arquivo '{nome_arquivo}' contém dados inválidos (não são números).")
         return []
 
+
+def escrever_no_arquivo(nome_arquivo:str, conteudo:str):
+    """
+    Escreve o conteúdo fornecido em um arquivo de texto.
+
+    Args:
+        nome_arquivo (str): O nome do arquivo onde o conteúdo será escrito.
+        conteudo (str): O conteúdo a ser escrito no arquivo.
+    """
+    try:
+        with open(nome_arquivo, 'w') as arquivo:
+            arquivo.write(conteudo)
+        print(f"Conteúdo escrito com sucesso no arquivo '{nome_arquivo}'.")
+    except Exception as e:
+        print(f"Erro ao escrever no arquivo '{nome_arquivo}': {e}")
 
 
 # if __name__ == "__main__":
