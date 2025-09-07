@@ -1,4 +1,4 @@
-def cocktail_sort(lista:list):
+def cocktail_sort(lista:list[int]):
     tamanho = len(lista)
     houve_troca = True
     inicio = 0

@@ -32,7 +32,7 @@ def manual_extend(lst1, lst2):
         new_lst[manual_len(lst1) + i] = lst2[i]
     return new_lst
 
-def radix_sort(list):
+def radix_sort(list:list[int]):
     if not list:
         return list
 
