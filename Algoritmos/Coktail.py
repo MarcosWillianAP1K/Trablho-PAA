@@ -34,8 +34,8 @@ def cocktail_sort(lista):
         inicio = inicio + 1
 
 # Exemplo de uso
-if __name__ == '__main__':
-    minha_lista = [5, 1, 4, 2, 8, 0, 2]
-    print("Lista original:", minha_lista)
-    cocktail_sort(minha_lista)
-    print("Lista ordenada:", minha_lista)
+# if __name__ == '__main__':
+#     minha_lista = [5, 1, 4, 2, 8, 0, 2]
+#     print("Lista original:", minha_lista)
+#     cocktail_sort(minha_lista)
+#     print("Lista ordenada:", minha_lista)

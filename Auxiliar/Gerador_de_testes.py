@@ -74,8 +74,8 @@ def ler_numeros_do_arquivo(nome_arquivo):
 
 
 
-if __name__ == "__main__":
+# if __name__ == "__main__":
 
-    lista = ler_numeros_do_arquivo('Arquivos_testes/crescentes_100.txt')
+#     lista = ler_numeros_do_arquivo('Arquivos_testes/crescentes_100.txt')
 
-    print("Números lidos do arquivo:", lista)
+#     print("Números lidos do arquivo:", lista)
