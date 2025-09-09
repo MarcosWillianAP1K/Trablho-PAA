@@ -1,26 +1,52 @@
-Nota: Os tempos apresentados são a media dos tempos de 10 execuções para cada lista.
+Nota: Os tempos apresentados sao a media dos tempos de 10 execucoes para cada lista.
 
 Resultados do Cocktail Sort para listas com 10000 elementos:
 
-Lista crescente: 0.0014416299993172288 milissegundos
-Lista decrescente: 10.08718790999701 milissegundos
-Lista aleatoria: 6.434447720003663 milissegundos
+Lista crescente: 0.0014416299993172288 segundos
+Lista decrescente: 10.08718790999701 segundos
+Lista aleatoria: 6.434447720003663 segundos
 
 ---------------------------------
 
 Resultados do Cocktail Sort para listas com 30000 elementos:
 
-Lista crescente: 0.006065149998175911 milissegundos
-Lista decrescente: 88.54240781000117 milissegundos
-Lista aleatoria: 55.14059964000044 milissegundos
+Lista crescente: 0.006065149998175911 segundos
+Lista decrescente: 88.54240781000117 segundos
+Lista aleatoria: 55.14059964000044 segundos
 
 ---------------------------------
 
 Resultados do Cocktail Sort para listas com 50000 elementos:
 
-Lista crescente: 0.006362839999201242 milissegundos
-Lista decrescente: 253.28275117000013 milissegundos
-Lista aleatoria: 168.10447137000446 milissegundos
+Lista crescente: 0.006362839999201242 segundos
+Lista decrescente: 253.28275117000013 segundos
+Lista aleatoria: 168.10447137000446 segundos
+
+---------------------------------
+
+Nota: Os tempos apresentados sao a media dos tempos de 10 execucoes para cada lista.
+
+Resultados do Cocktail Sort para listas com 100 elementos:
+
+Lista crescente: 1.503999810665846e-05 segundos
+Lista decrescente: 0.0012021300004562362 segundos
+Lista aleatoria: 0.00074777000118047 segundos
+
+---------------------------------
+
+Resultados do Cocktail Sort para listas com 500 elementos:
+
+Lista crescente: 6.737999792676419e-05 segundos
+Lista decrescente: 0.028626240001176483 segundos
+Lista aleatoria: 0.02154178999917349 segundos
+
+---------------------------------
+
+Resultados do Cocktail Sort para listas com 1000 elementos:
+
+Lista crescente: 0.00016116000042529777 segundos
+Lista decrescente: 0.14521105000021634 segundos
+Lista aleatoria: 0.09178758000198287 segundos
 
 ---------------------------------
 

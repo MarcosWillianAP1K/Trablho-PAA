@@ -63,9 +63,9 @@ def executar_testes_coktail():
 
         Manipulador_arquivos_txt.escrever_no_arquivo(f'Resultados/Resultados_coktail.txt',
                                                      f"Resultados do Cocktail Sort para listas com {i} elementos:\n\n"
-                                                     f"Lista crescente: {resultado_crescente/10} milissegundos\n"
-                                                     f"Lista decrescente: {resultado_decrescente/10} milissegundos\n"
-                                                     f"Lista aleatoria: {resultado_aleatoria/10} milissegundos\n\n"
+                                                     f"Lista crescente: {resultado_crescente/10} segundos\n"
+                                                     f"Lista decrescente: {resultado_decrescente/10} segundos\n"
+                                                     f"Lista aleatoria: {resultado_aleatoria/10} segundos\n\n"
                                                      f"---------------------------------\n\n")
         
         print()
@@ -116,9 +116,9 @@ def executar_testes_radix():
         
         Manipulador_arquivos_txt.escrever_no_arquivo(f'Resultados/Resultados_radix.txt',
                                                      f"Resultados do Radix Sort para listas com {i} elementos:\n\n"
-                                                     f"Lista crescente: {resultado_crescente/10} milissegundos\n"
-                                                     f"Lista decrescente: {resultado_decrescente/10} milissegundos\n"
-                                                     f"Lista aleatoria: {resultado_aleatoria/10} milissegundos\n\n"
+                                                     f"Lista crescente: {resultado_crescente/10} segundos\n"
+                                                     f"Lista decrescente: {resultado_decrescente/10} segundos\n"
+                                                     f"Lista aleatoria: {resultado_aleatoria/10} segundos\n\n"
                                                      f"---------------------------------\n\n")
         
         print()
@@ -130,7 +130,7 @@ if __name__ == '__main__':
     
     gerar_arquivos_de_teste()
     print("\n---------------------------------\n")
-    Manipulador_arquivos_txt.limpar_arquivo(f'Resultados/Resultados_coktail.txt')
+    # Manipulador_arquivos_txt.limpar_arquivo(f'Resultados/Resultados_coktail.txt')
     
     executar_testes_coktail()
     print("\n---------------------------------\n")

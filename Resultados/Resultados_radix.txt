@@ -1,26 +1,52 @@
-Nota: Os tempos apresentados são a media dos tempos de 10 execuções para cada lista.
+Nota: Os tempos apresentados sao a media dos tempos de 10 execucoes para cada lista.
 
 Resultados do Radix Sort para listas com 10000 elementos:
 
-Lista crescente: 21.961407019998298 milissegundos
-Lista decrescente: 23.260370160000456 milissegundos
-Lista aleatoria: 23.543437940001603 milissegundos
+Lista crescente: 21.961407019998298 segundos
+Lista decrescente: 23.260370160000456 segundos
+Lista aleatoria: 23.543437940001603 segundos
 
 ---------------------------------
 
 Resultados do Radix Sort para listas com 30000 elementos:
 
-Lista crescente: 165.55319405000046 milissegundos
-Lista decrescente: 161.9843063599983 milissegundos
-Lista aleatoria: 182.1846574500014 milissegundos
+Lista crescente: 165.55319405000046 segundos
+Lista decrescente: 161.9843063599983 segundos
+Lista aleatoria: 182.1846574500014 segundos
 
 ---------------------------------
 
 Resultados do Radix Sort para listas com 50000 elementos:
 
-Lista crescente: 429.0015347599998 milissegundos
-Lista decrescente: 429.3756331599972 milissegundos
-Lista aleatoria: 458.956358419999 milissegundos
+Lista crescente: 429.0015347599998 segundos
+Lista decrescente: 429.3756331599972 segundos
+Lista aleatoria: 458.956358419999 segundos
+
+---------------------------------
+
+Nota: Os tempos apresentados sao a media dos tempos de 10 execucoes para cada lista.
+
+Resultados do Radix Sort para listas com 100 elementos:
+
+Lista crescente: 0.0024492900003679095 segundos
+Lista decrescente: 0.0024044599995249882 segundos
+Lista aleatoria: 0.0026297199990949595 segundos
+
+---------------------------------
+
+Resultados do Radix Sort para listas com 500 elementos:
+
+Lista crescente: 0.02412122000096133 segundos
+Lista decrescente: 0.028525350002746565 segundos
+Lista aleatoria: 0.028760159997909797 segundos
+
+---------------------------------
+
+Resultados do Radix Sort para listas com 1000 elementos:
+
+Lista crescente: 0.14910626000200863 segundos
+Lista decrescente: 0.15927268999948865 segundos
+Lista aleatoria: 0.15551398000097832 segundos
 
 ---------------------------------
 
