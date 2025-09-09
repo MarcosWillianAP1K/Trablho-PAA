@@ -1,24 +1,2 @@
-Resultados do Cocktail Sort para listas com 10000 elementos:
-
-Lista crescente: 0.001064799987943843 milissegundos
-Lista decrescente: 10.37244059999648 milissegundos
-Lista aleatoria: 5.794990700000199 milissegundos
-
----------------------------------
-
-Resultados do Cocktail Sort para listas com 50000 elementos:
-
-Lista crescente: 0.01017870000214316 milissegundos
-Lista decrescente: 239.8494165000011 milissegundos
-Lista aleatoria: 153.74890620000951 milissegundos
-
----------------------------------
-
-Resultados do Cocktail Sort para listas com 100000 elementos:
-
-Lista crescente: 0.008210099986172281 milissegundos
-Lista decrescente: 947.6030897000019 milissegundos
-Lista aleatoria: 615.9693699000054 milissegundos
-
----------------------------------
+Nota: Os tempos apresentados são a media dos tempos de 10 execuções para cada lista.
 
