@@ -4,7 +4,7 @@ from Algoritmos import Coktail
 from Algoritmos import Radix
 
 #Defina na lista cada indice indicando a quantidade de numero do arquivo de teste, e a quantidade de indices indica quantos testes serao feitos
-lista_quantidade_de_testes = ["10000", "50000", "100000", "500000"]
+lista_quantidade_de_testes = ["10000", "30000", "50000"]
 
 def gerar_arquivos_de_teste():
     for i in lista_quantidade_de_testes:
@@ -15,7 +15,12 @@ def gerar_arquivos_de_teste():
 
 def executar_testes_coktail():
 
+    print("=========Iniciando testes do Cocktail Sort=========\n")
+
     Manipulador_arquivos_txt.limpar_arquivo(f'Resultados/Resultados_coktail.txt')
+    
+    Manipulador_arquivos_txt.escrever_no_arquivo(f'Resultados/Resultados_coktail.txt',
+                                                 "Nota: Os tempos apresentados são a media dos tempos de 10 execuções para cada lista.\n\n")
     
     #Para cada quantidade ler o arquivo correspondente (Ja padronizado na funcao de gerar arquivos so mudando a quantidade)
     for i in lista_quantidade_de_testes:
@@ -39,25 +44,42 @@ def executar_testes_coktail():
 
             return tempo_segundos
 
-        resultado_crescente = testar_lista("crescente", lista_crescente)
-        resultado_decrescente = testar_lista("decrescente", lista_decrescente)
-        resultado_aleatoria = testar_lista("aleatória", lista_aleatoria)
-        
+
+        #testar 10 vezes cada para ter uma media
+        resultado_crescente = 0.0
+        resultado_decrescente = 0.0
+        resultado_aleatoria = 0.0
+
+        for j in range(10):
+            #copia a lista para nao ordenar a original e poder usar nas outras ordenacoes
+            lista_aux = lista_decrescente.copy()
+            #A crescente nao precisa de copia pq nunca sera alterada
+            resultado_crescente += testar_lista("crescente", lista_crescente)
+            resultado_decrescente += testar_lista("decrescente", lista_aux)
+            lista_aux = lista_aleatoria.copy()
+            resultado_aleatoria += testar_lista("aleatória", lista_aux)
+
+
         print()
 
         Manipulador_arquivos_txt.escrever_no_arquivo(f'Resultados/Resultados_coktail.txt',
                                                      f"Resultados do Cocktail Sort para listas com {i} elementos:\n\n"
-                                                     f"Lista crescente: {resultado_crescente} milissegundos\n"
-                                                     f"Lista decrescente: {resultado_decrescente} milissegundos\n"
-                                                     f"Lista aleatoria: {resultado_aleatoria} milissegundos\n\n"
+                                                     f"Lista crescente: {resultado_crescente/10} milissegundos\n"
+                                                     f"Lista decrescente: {resultado_decrescente/10} milissegundos\n"
+                                                     f"Lista aleatoria: {resultado_aleatoria/10} milissegundos\n\n"
                                                      f"---------------------------------\n\n")
         
         print()
 
 def executar_testes_radix():
     
+    print("=========Iniciando testes do Radix Sort=========\n")
+    
     Manipulador_arquivos_txt.limpar_arquivo(f'Resultados/Resultados_radix.txt')
     
+    Manipulador_arquivos_txt.escrever_no_arquivo(f'Resultados/Resultados_radix.txt',
+                                                 "Nota: Os tempos apresentados são a media dos tempos de 10 execuções para cada lista.\n\n")
+
     #Para cada quantidade ler o arquivo correspondente (Ja padronizado na funcao de gerar arquivos so mudando a quantidade)
     for i in lista_quantidade_de_testes:
         
@@ -68,27 +90,37 @@ def executar_testes_radix():
         print()
         
         def testar_lista(tipo_lista:str, lista:list[int]):
-            cronometro = Cronometro.Cronometro()
-            cronometro.iniciar()
-            Radix.radix_sort(lista)
-            cronometro.parar()
-            tempo_segundos = cronometro.tempo_segundos()
-            print(f"Tempo de execução do Radix Sort para lista {tipo_lista} com {i} elementos: {tempo_segundos} segundos")
-            cronometro.resetar()
+                cronometro = Cronometro.Cronometro()
+                cronometro.iniciar()
+                Radix.radix_sort(lista)
+                cronometro.parar()
+                tempo_segundos = cronometro.tempo_segundos()
+                print(f"Tempo de execução do Radix Sort para lista {tipo_lista} com {i} elementos: {tempo_segundos} segundos")
+                cronometro.resetar()
 
-            return tempo_segundos
-
-        resultado_crescente = testar_lista("crescente", lista_crescente)
-        resultado_decrescente = testar_lista("decrescente", lista_decrescente)
-        resultado_aleatoria = testar_lista("aleatória", lista_aleatoria)
+                return tempo_segundos
         
+        #testar 10 vezes cada para ter uma media
+        resultado_crescente = 0.0
+        resultado_decrescente = 0.0
+        resultado_aleatoria = 0.0
+        
+        for j in range(10):
+            #copia a lista para nao ordenar a original e poder usar nas outras ordenacoes
+            lista_aux = lista_decrescente.copy()
+            #A crescente nao precisa de copia pq nunca sera alterada
+            resultado_crescente += testar_lista("crescente", lista_crescente)
+            resultado_decrescente += testar_lista("decrescente", lista_aux)
+            lista_aux = lista_aleatoria.copy()
+            resultado_aleatoria += testar_lista("aleatória", lista_aux)
+
         print()
         
         Manipulador_arquivos_txt.escrever_no_arquivo(f'Resultados/Resultados_radix.txt',
                                                      f"Resultados do Radix Sort para listas com {i} elementos:\n\n"
-                                                     f"Lista crescente: {resultado_crescente} milissegundos\n"
-                                                     f"Lista decrescente: {resultado_decrescente} milissegundos\n"
-                                                     f"Lista aleatoria: {resultado_aleatoria} milissegundos\n\n"
+                                                     f"Lista crescente: {resultado_crescente/10} milissegundos\n"
+                                                     f"Lista decrescente: {resultado_decrescente/10} milissegundos\n"
+                                                     f"Lista aleatoria: {resultado_aleatoria/10} milissegundos\n\n"
                                                      f"---------------------------------\n\n")
         
         print()
