@@ -1,0 +1,26 @@
+Nota: Os tempos apresentados são a media dos tempos de 10 execuções para cada lista.
+
+Resultados do Radix Sort para listas com 10000 elementos:
+
+Lista crescente: 21.961407019998298 milissegundos
+Lista decrescente: 23.260370160000456 milissegundos
+Lista aleatoria: 23.543437940001603 milissegundos
+
+---------------------------------
+
+Resultados do Radix Sort para listas com 30000 elementos:
+
+Lista crescente: 165.55319405000046 milissegundos
+Lista decrescente: 161.9843063599983 milissegundos
+Lista aleatoria: 182.1846574500014 milissegundos
+
+---------------------------------
+
+Resultados do Radix Sort para listas com 50000 elementos:
+
+Lista crescente: 429.0015347599998 milissegundos
+Lista decrescente: 429.3756331599972 milissegundos
+Lista aleatoria: 458.956358419999 milissegundos
+
+---------------------------------
+

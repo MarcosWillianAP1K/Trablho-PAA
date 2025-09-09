@@ -4,7 +4,7 @@ from Algoritmos import Coktail
 from Algoritmos import Radix
 
 #Defina na lista cada indice indicando a quantidade de numero do arquivo de teste, e a quantidade de indices indica quantos testes serao feitos
-lista_quantidade_de_testes = ["10000", "30000", "50000"]
+lista_quantidade_de_testes = ["100", "500", "1000"]
 
 def gerar_arquivos_de_teste():
     for i in lista_quantidade_de_testes:
@@ -16,11 +16,9 @@ def gerar_arquivos_de_teste():
 def executar_testes_coktail():
 
     print("=========Iniciando testes do Cocktail Sort=========\n")
-
-    Manipulador_arquivos_txt.limpar_arquivo(f'Resultados/Resultados_coktail.txt')
     
     Manipulador_arquivos_txt.escrever_no_arquivo(f'Resultados/Resultados_coktail.txt',
-                                                 "Nota: Os tempos apresentados são a media dos tempos de 10 execuções para cada lista.\n\n")
+                                                 "Nota: Os tempos apresentados sao a media dos tempos de 10 execucoes para cada lista.\n\n")
     
     #Para cada quantidade ler o arquivo correspondente (Ja padronizado na funcao de gerar arquivos so mudando a quantidade)
     for i in lista_quantidade_de_testes:
@@ -76,10 +74,9 @@ def executar_testes_radix():
     
     print("=========Iniciando testes do Radix Sort=========\n")
     
-    Manipulador_arquivos_txt.limpar_arquivo(f'Resultados/Resultados_radix.txt')
     
     Manipulador_arquivos_txt.escrever_no_arquivo(f'Resultados/Resultados_radix.txt',
-                                                 "Nota: Os tempos apresentados são a media dos tempos de 10 execuções para cada lista.\n\n")
+                                                 "Nota: Os tempos apresentados sao a media dos tempos de 10 execucoes para cada lista.\n\n")
 
     #Para cada quantidade ler o arquivo correspondente (Ja padronizado na funcao de gerar arquivos so mudando a quantidade)
     for i in lista_quantidade_de_testes:
@@ -133,7 +130,11 @@ if __name__ == '__main__':
     
     gerar_arquivos_de_teste()
     print("\n---------------------------------\n")
+    Manipulador_arquivos_txt.limpar_arquivo(f'Resultados/Resultados_coktail.txt')
     
     executar_testes_coktail()
     print("\n---------------------------------\n")
+    
+    #Manipulador_arquivos_txt.limpar_arquivo(f'Resultados/Resultados_radix.txt')
+    
     executar_testes_radix()
