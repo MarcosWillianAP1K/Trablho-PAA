@@ -31,7 +31,7 @@ def executar_testes_coktail():
         lista_decrescente = Manipulador_arquivos_txt.ler_numeros_do_arquivo(f'Arquivos_testes/decrescentes_{i}.txt')
         lista_aleatoria = Manipulador_arquivos_txt.ler_numeros_do_arquivo(f'Arquivos_testes/aleatorios_{i}.txt')
         
-        print()
+        
         
         def testar_lista(tipo_lista:str, lista:list[int]):
             cronometro = Cronometro.Cronometro()
@@ -51,6 +51,7 @@ def executar_testes_coktail():
         resultado_aleatoria = 0.0
 
         for j in range(10):
+            print(f"\nTeste {j+1} de 10 para listas com {i} elementos.\n")
             #copia a lista para nao ordenar a original e poder usar nas outras ordenacoes
             lista_aux = lista_decrescente.copy()
             #A crescente nao precisa de copia pq nunca sera alterada
@@ -87,7 +88,6 @@ def executar_testes_radix():
         lista_decrescente = Manipulador_arquivos_txt.ler_numeros_do_arquivo(f'Arquivos_testes/decrescentes_{i}.txt')
         lista_aleatoria = Manipulador_arquivos_txt.ler_numeros_do_arquivo(f'Arquivos_testes/aleatorios_{i}.txt')
         
-        print()
         
         def testar_lista(tipo_lista:str, lista:list[int]):
                 cronometro = Cronometro.Cronometro()
@@ -106,6 +106,7 @@ def executar_testes_radix():
         resultado_aleatoria = 0.0
         
         for j in range(10):
+            print(f"\nTeste {j+1} de 10 para listas com {i} elementos.\n")
             #copia a lista para nao ordenar a original e poder usar nas outras ordenacoes
             lista_aux = lista_decrescente.copy()
             #A crescente nao precisa de copia pq nunca sera alterada
