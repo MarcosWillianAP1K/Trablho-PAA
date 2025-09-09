@@ -1,8 +1,0 @@
-Resultados do Radix Sort para listas com 100 elementos:
-
-Lista crescente: 1.386200005072169 milissegundos
-Lista decrescente: 1.35749999753898 milissegundos
-Lista aleatoria: 1.3582000028691255 milissegundos
-
----------------------------------
-

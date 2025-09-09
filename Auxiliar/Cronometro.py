@@ -17,3 +17,6 @@ class Cronometro:
 
     def tempo_milisegundos(self):
         return self.tempo_total * 1000
+    
+    def tempo_segundos(self):
+        return self.tempo_total

@@ -1,0 +1,8 @@
+Resultados do Cocktail Sort para listas com 10000 elementos:
+
+Lista crescente: 2.1484000026248395 milissegundos
+Lista decrescente: 11048.328200005926 milissegundos
+Lista aleatoria: 7479.233399993973 milissegundos
+
+---------------------------------
+
