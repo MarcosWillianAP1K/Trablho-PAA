@@ -142,6 +142,19 @@ def gerar_graficos():
         print(f"\nErro ao gerar gráficos: {e}")
         print("Verifique se o diretório 'Resultados' existe e se você tem permissão para escrever nele.")
         
+def gerar_graficos_pequenos():
+    try:
+        print("\nGerando gráficos apenas com os dados de listas pequenas (100, 500, 1000)...")
+        gerador_graficos.gerar_graficos_dados_pequenos()
+        print("\nTodos os gráficos para dados pequenos foram gerados com sucesso!")
+    except ModuleNotFoundError as e:
+        print(f"\nErro ao gerar gráficos: {e}")
+        print("Para gerar os gráficos, instale as bibliotecas necessárias com:")
+        print("pip install matplotlib numpy")
+    except Exception as e:
+        print(f"\nErro ao gerar gráficos: {e}")
+        print("Verifique se o diretório 'Resultados' existe e se você tem permissão para escrever nele.")
+        
 
 if __name__ == '__main__':
     
@@ -157,3 +170,8 @@ if __name__ == '__main__':
     gerar_grafs = input("\nDeseja gerar gráficos dos resultados? (s/n): ")
     if gerar_grafs.lower() == 's':
         gerar_graficos()
+        
+        # Perguntar se deseja gerar gráficos apenas com dados pequenos
+        gerar_pequenos = input("\nDeseja gerar gráficos apenas com dados de listas pequenas (100, 500, 1000)? (s/n): ")
+        if gerar_pequenos.lower() == 's':
+            gerar_graficos_pequenos()
