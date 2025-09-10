@@ -2,6 +2,7 @@ from Auxiliar import Cronometro
 from Auxiliar import Manipulador_arquivos_txt
 from Algoritmos import Coktail
 from Algoritmos import Radix
+from Auxiliar import gerador_graficos
 
 #Defina na lista cada indice indicando a quantidade de numero do arquivo de teste, e a quantidade de indices indica quantos testes serao feitos
 lista_quantidade_de_testes = ["100", "500", "1000"]
@@ -126,15 +127,33 @@ def executar_testes_radix():
 
 
 
+def gerar_graficos():
+    try:
+        print("\nGerando gráficos dos resultados...")
+        gerador_graficos.gerar_grafico_comparativo_algoritmos()
+        gerador_graficos.gerar_grafico_por_algoritmo()
+        gerador_graficos.gerar_grafico_barras_comparativo()
+        print("\nTodos os gráficos foram gerados com sucesso!")
+    except ModuleNotFoundError as e:
+        print(f"\nErro ao gerar gráficos: {e}")
+        print("Para gerar os gráficos, instale as bibliotecas necessárias com:")
+        print("pip install matplotlib numpy")
+    except Exception as e:
+        print(f"\nErro ao gerar gráficos: {e}")
+        print("Verifique se o diretório 'Resultados' existe e se você tem permissão para escrever nele.")
+        
+
 if __name__ == '__main__':
     
-    gerar_arquivos_de_teste()
-    print("\n---------------------------------\n")
-    # Manipulador_arquivos_txt.limpar_arquivo(f'Resultados/Resultados_coktail.txt')
-    
-    executar_testes_coktail()
-    print("\n---------------------------------\n")
-    
+    # gerar_arquivos_de_teste()
+    # print("\n---------------------------------\n")
+    # # Manipulador_arquivos_txt.limpar_arquivo(f'Resultados/Resultados_coktail.txt')
+    # executar_testes_coktail()
+    # print("\n---------------------------------\n")
     #Manipulador_arquivos_txt.limpar_arquivo(f'Resultados/Resultados_radix.txt')
+    # executar_testes_radix()
     
-    executar_testes_radix()
+    # Perguntar ao usuário se deseja gerar os gráficos
+    gerar_grafs = input("\nDeseja gerar gráficos dos resultados? (s/n): ")
+    if gerar_grafs.lower() == 's':
+        gerar_graficos()
