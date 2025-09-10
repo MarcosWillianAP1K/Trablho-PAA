@@ -155,6 +155,19 @@ def gerar_graficos_pequenos():
         print(f"\nErro ao gerar gráficos: {e}")
         print("Verifique se o diretório 'Resultados' existe e se você tem permissão para escrever nele.")
         
+def gerar_tabelas():
+    try:
+        print("\nGerando tabelas com os resultados...")
+        gerador_graficos.gerar_tabelas_png()
+        print("\nTodas as tabelas foram geradas com sucesso!")
+        print("As tabelas estão disponíveis na pasta 'Resultados' como imagens PNG.")
+    except ModuleNotFoundError as e:
+        print(f"\nErro ao gerar tabelas: {e}")
+        print("Para gerar as tabelas, instale as bibliotecas necessárias.")
+    except Exception as e:
+        print(f"\nErro ao gerar tabelas: {e}")
+        print("Verifique se o diretório 'Resultados' existe e se você tem permissão para escrever nele.")
+        
 
 if __name__ == '__main__':
     
@@ -175,3 +188,8 @@ if __name__ == '__main__':
         gerar_pequenos = input("\nDeseja gerar gráficos apenas com dados de listas pequenas (100, 500, 1000)? (s/n): ")
         if gerar_pequenos.lower() == 's':
             gerar_graficos_pequenos()
+            
+        # Perguntar se deseja gerar tabelas PNG
+        gerar_tabs = input("\nDeseja gerar tabelas PNG com os resultados? (s/n): ")
+        if gerar_tabs.lower() == 's':
+            gerar_tabelas()

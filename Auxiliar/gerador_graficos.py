@@ -498,24 +498,366 @@ def gerar_graficos_dados_pequenos():
     
     print("\nTodos os gráficos com dados pequenos foram gerados com sucesso!")
 
-# # Executar as funções de geração de gráficos
-# if __name__ == "__main__":
-#     # Verificar se o diretório de resultados existe
-#     base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-#     resultados_dir = os.path.join(base_dir, 'Resultados')
-#     if not os.path.exists(resultados_dir):
-#         os.makedirs(resultados_dir)
+def gerar_tabelas_html():
+    """
+    Gera tabelas HTML com os resultados dos algoritmos, com os tamanhos das listas
+    na primeira coluna e os tipos de lista (crescente, decrescente, aleatória) nas colunas.
+    Salva as tabelas em arquivos HTML na pasta de Resultados.
+    """
+    # Use absolute paths to ensure correct file location
+    import os
+    base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    dados_cocktail = extrair_dados_arquivo(os.path.join(base_dir, 'Resultados', 'Resultados_coktail.txt'))
+    dados_radix = extrair_dados_arquivo(os.path.join(base_dir, 'Resultados', 'Resultados_radix.txt'))
+    
+    # Verificar se foram extraídos dados
+    if not dados_cocktail or not dados_radix:
+        print("Erro: Não foi possível extrair dados dos arquivos de resultado")
+        return
+    
+    algoritmos = [
+        ('Cocktail Sort', dados_cocktail, 'cocktail'),
+        ('Radix Sort', dados_radix, 'radix')
+    ]
+    
+    # Estilos CSS para a tabela
+    estilos_css = """
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin: 20px 0;
+            font-family: Arial, sans-serif;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: center;
+        }
+        th {
+            padding-top: 12px;
+            padding-bottom: 12px;
+            background-color: #4CAF50;
+            color: white;
+        }
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        tr:hover {
+            background-color: #ddd;
+        }
+        .header {
+            text-align: center;
+            padding: 20px 0;
+            font-family: Arial, sans-serif;
+        }
+    </style>
+    """
+    
+    # Para cada algoritmo, gerar uma tabela
+    for nome, dados, arquivo in algoritmos:
+        if not dados:
+            continue
+            
+        tamanhos = sorted(dados.keys())
         
-#     print("Gerando gráficos de comparação...")
-#     gerar_grafico_comparativo_algoritmos()
+        # Criar o conteúdo HTML
+        html_content = f"""
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <title>Resultados do {nome}</title>
+            {estilos_css}
+        </head>
+        <body>
+            <div class="header">
+                <h1>Resultados do {nome}</h1>
+                <p>Tempos de execução para diferentes tamanhos de lista e tipos de entrada</p>
+            </div>
+            
+            <table>
+                <tr>
+                    <th>Tamanho da Lista</th>
+                    <th>Lista Crescente (s)</th>
+                    <th>Lista Decrescente (s)</th>
+                    <th>Lista Aleatória (s)</th>
+                </tr>
+        """
+        
+        # Adicionar os dados para cada tamanho de lista
+        for tamanho in tamanhos:
+            tempo_crescente = formatar_valor(dados[tamanho]['crescente'])
+            tempo_decrescente = formatar_valor(dados[tamanho]['decrescente'])
+            tempo_aleatorio = formatar_valor(dados[tamanho]['aleatorio'])
+            
+            html_content += f"""
+                <tr>
+                    <td>{tamanho}</td>
+                    <td>{tempo_crescente}</td>
+                    <td>{tempo_decrescente}</td>
+                    <td>{tempo_aleatorio}</td>
+                </tr>
+            """
+        
+        html_content += """
+            </table>
+        </body>
+        </html>
+        """
+        
+        # Salvar o arquivo HTML
+        save_path = os.path.join(base_dir, 'Resultados', f'tabela_{arquivo}.html')
+        with open(save_path, 'w') as f:
+            f.write(html_content)
+        
+        print(f"Tabela HTML para {nome} gerada: '{save_path}'")
     
-#     print("\nGerando gráficos de desempenho por algoritmo...")
-#     gerar_grafico_por_algoritmo()
+    # Criar uma tabela comparativa
+    html_comparativo = f"""
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <title>Comparação de Algoritmos</title>
+        {estilos_css}
+    </head>
+    <body>
+        <div class="header">
+            <h1>Comparação entre Cocktail Sort e Radix Sort</h1>
+            <p>Comparação dos tempos de execução para diferentes tamanhos e tipos de lista</p>
+        </div>
+    """
     
-#     print("\nGerando gráficos de barras comparativos...")
-#     gerar_grafico_barras_comparativo()
+    # Lista de tamanhos comuns para comparação
+    tamanhos_comuns = sorted(set(dados_cocktail.keys()) & set(dados_radix.keys()))
     
-#     print("\nGerando gráficos para dados pequenos...")
-#     gerar_graficos_dados_pequenos()
+    # Para cada tipo de lista, criar uma tabela separada
+    tipos = [('crescente', 'Lista Crescente'), ('decrescente', 'Lista Decrescente'), ('aleatorio', 'Lista Aleatória')]
     
-#     print("\nTodos os gráficos foram gerados com sucesso!")
+    for tipo, titulo in tipos:
+        html_comparativo += f"""
+        <h2>{titulo}</h2>
+        <table>
+            <tr>
+                <th>Tamanho da Lista</th>
+                <th>Cocktail Sort (s)</th>
+                <th>Radix Sort (s)</th>
+                <th>Diferença (s)</th>
+                <th>Cocktail/Radix</th>
+            </tr>
+        """
+        
+        for tamanho in tamanhos_comuns:
+            tempo_cocktail = dados_cocktail[tamanho][tipo]
+            tempo_radix = dados_radix[tamanho][tipo]
+            diferenca = tempo_cocktail - tempo_radix
+            razao = tempo_cocktail / tempo_radix if tempo_radix > 0 else float('inf')
+            
+            html_comparativo += f"""
+            <tr>
+                <td>{tamanho}</td>
+                <td>{formatar_valor(tempo_cocktail)}</td>
+                <td>{formatar_valor(tempo_radix)}</td>
+                <td>{formatar_valor(diferenca)}</td>
+                <td>{formatar_valor(razao)}</td>
+            </tr>
+            """
+        
+        html_comparativo += """
+        </table>
+        """
+    
+    html_comparativo += """
+    </body>
+    </html>
+    """
+    
+    # Salvar o arquivo HTML comparativo
+    save_path_comp = os.path.join(base_dir, 'Resultados', 'tabela_comparativa.html')
+    with open(save_path_comp, 'w') as f:
+        f.write(html_comparativo)
+    
+    print(f"Tabela HTML comparativa gerada: '{save_path_comp}'")
+
+def gerar_tabelas_png():
+    """
+    Gera tabelas como imagens PNG com os resultados dos algoritmos, mostrando o tamanho
+    das listas na primeira coluna e os tipos de listas nas colunas.
+    """
+    # Use absolute paths to ensure correct file location
+    import os
+    from matplotlib.table import Table
+    
+    base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    dados_cocktail = extrair_dados_arquivo(os.path.join(base_dir, 'Resultados', 'Resultados_coktail.txt'))
+    dados_radix = extrair_dados_arquivo(os.path.join(base_dir, 'Resultados', 'Resultados_radix.txt'))
+    
+    # Verificar se foram extraídos dados
+    if not dados_cocktail or not dados_radix:
+        print("Erro: Não foi possível extrair dados dos arquivos de resultado")
+        return
+    
+    algoritmos = [
+        ('Cocktail Sort', dados_cocktail, 'cocktail'),
+        ('Radix Sort', dados_radix, 'radix')
+    ]
+    
+    # Gerar uma tabela para cada algoritmo
+    for nome, dados, arquivo in algoritmos:
+        if not dados:
+            continue
+            
+        tamanhos = sorted(dados.keys())
+        
+        # Definir o tamanho da figura baseado no número de linhas (tamanhos)
+        fig_height = max(6, 3 + len(tamanhos) * 0.4)
+        plt.figure(figsize=(10, fig_height))
+        ax = plt.subplot(111, frame_on=False)
+        ax.xaxis.set_visible(False)  # Esconder eixo x
+        ax.yaxis.set_visible(False)  # Esconder eixo y
+        
+        # Criar cabeçalho com os títulos das colunas
+        cell_text = []
+        for tamanho in tamanhos:
+            # Formatar os valores para cada tipo de lista
+            row = [
+                f"{tamanho}",
+                formatar_valor(dados[tamanho]['crescente']),
+                formatar_valor(dados[tamanho]['decrescente']),
+                formatar_valor(dados[tamanho]['aleatorio'])
+            ]
+            cell_text.append(row)
+        
+        # Definir cabeçalhos de coluna
+        column_headers = [
+            'Tamanho da Lista', 
+            'Lista Crescente (s)', 
+            'Lista Decrescente (s)', 
+            'Lista Aleatória (s)'
+        ]
+        
+        # Criar a tabela
+        table = ax.table(
+            cellText=cell_text,
+            colLabels=column_headers,
+            loc='center',
+            cellLoc='center'
+        )
+        
+        # Estilizar a tabela
+        table.auto_set_font_size(False)
+        table.set_fontsize(10)
+        table.scale(1, 1.5)  # Tornar células um pouco mais altas
+        
+        # Estilizar cabeçalho
+        for k, cell in table.get_celld().items():
+            if k[0] == 0:  # Cabeçalho (primeira linha)
+                cell.set_text_props(weight='bold', color='white')
+                cell.set_facecolor('#4CAF50')  # Verde
+            else:  # Corpo da tabela
+                if k[0] % 2 == 0:  # Linhas pares
+                    cell.set_facecolor('#f2f2f2')  # Cinza claro
+        
+        plt.title(f'Resultados do {nome}', fontsize=16, pad=20)
+        plt.tight_layout()
+        
+        # Salvar a tabela como imagem
+        save_path = os.path.join(base_dir, 'Resultados', f'tabela_{arquivo}.png')
+        plt.savefig(save_path, bbox_inches='tight', dpi=200)
+        print(f"Tabela PNG para {nome} gerada: '{save_path}'")
+        plt.close()
+    
+    # Criar tabelas comparativas separadas por tipo de lista
+    tipos = [('crescente', 'Lista Crescente'), ('decrescente', 'Lista Decrescente'), ('aleatorio', 'Lista Aleatória')]
+    tamanhos_comuns = sorted(set(dados_cocktail.keys()) & set(dados_radix.keys()))
+    
+    for tipo, titulo in tipos:
+        fig_height = max(6, 3 + len(tamanhos_comuns) * 0.4)
+        plt.figure(figsize=(12, fig_height))
+        ax = plt.subplot(111, frame_on=False)
+        ax.xaxis.set_visible(False)
+        ax.yaxis.set_visible(False)
+        
+        # Criar dados para a tabela
+        cell_text = []
+        for tamanho in tamanhos_comuns:
+            tempo_cocktail = dados_cocktail[tamanho][tipo]
+            tempo_radix = dados_radix[tamanho][tipo]
+            diferenca = tempo_cocktail - tempo_radix
+            razao = tempo_cocktail / tempo_radix if tempo_radix > 0 else float('inf')
+            
+            row = [
+                f"{tamanho}",
+                formatar_valor(tempo_cocktail),
+                formatar_valor(tempo_radix),
+                formatar_valor(diferenca),
+                formatar_valor(razao)
+            ]
+            cell_text.append(row)
+        
+        # Definir cabeçalhos de coluna
+        comp_headers = [
+            'Tamanho da Lista',
+            'Cocktail Sort (s)',
+            'Radix Sort (s)',
+            'Diferença (s)',
+            'Cocktail/Radix'
+        ]
+        
+        # Criar a tabela
+        table = ax.table(
+            cellText=cell_text,
+            colLabels=comp_headers,
+            loc='center',
+            cellLoc='center'
+        )
+        
+        # Estilizar a tabela
+        table.auto_set_font_size(False)
+        table.set_fontsize(10)
+        table.scale(1, 1.5)  # Tornar células um pouco mais altas
+        
+        # Estilizar cabeçalho e alternar cores de linhas
+        for k, cell in table.get_celld().items():
+            if k[0] == 0:  # Cabeçalho (primeira linha)
+                cell.set_text_props(weight='bold', color='white')
+                cell.set_facecolor('#4CAF50')  # Verde
+            else:  # Corpo da tabela
+                if k[0] % 2 == 0:  # Linhas pares
+                    cell.set_facecolor('#f2f2f2')  # Cinza claro
+        
+        plt.title(f'Comparação - {titulo}', fontsize=16, pad=20)
+        plt.tight_layout()
+        
+        # Salvar a tabela como imagem
+        save_path = os.path.join(base_dir, 'Resultados', f'tabela_comparativa_{tipo}.png')
+        plt.savefig(save_path, bbox_inches='tight', dpi=200)
+        print(f"Tabela comparativa PNG para {titulo} gerada: '{save_path}'")
+        plt.close()
+
+# Executar as funções de geração de gráficos
+if __name__ == "__main__":
+    # Verificar se o diretório de resultados existe
+    base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    resultados_dir = os.path.join(base_dir, 'Resultados')
+    if not os.path.exists(resultados_dir):
+        os.makedirs(resultados_dir)
+        
+    print("Gerando gráficos de comparação...")
+    gerar_grafico_comparativo_algoritmos()
+    
+    print("\nGerando gráficos de desempenho por algoritmo...")
+    gerar_grafico_por_algoritmo()
+    
+    print("\nGerando gráficos de barras comparativos...")
+    gerar_grafico_barras_comparativo()
+    
+    print("\nGerando gráficos para dados pequenos...")
+    gerar_graficos_dados_pequenos()
+    
+    print("\nGerando tabelas HTML...")
+    gerar_tabelas_html()
+    
+    print("\nGerando tabelas PNG...")
+    gerar_tabelas_png()
+    
+    print("\nTodos os gráficos e tabelas foram gerados com sucesso!")
