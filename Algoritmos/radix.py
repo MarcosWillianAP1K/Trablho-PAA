@@ -37,6 +37,8 @@ def radix_sort(list:list[int]):
         return list
 
     max_val = manual_max(list)
+    n = manual_len(list)
+    output = [0] * n
 
     exp = 1
     while max_val // exp > 0:
@@ -46,9 +48,14 @@ def radix_sort(list:list[int]):
             digit = (num // exp) % 10
             buckets[digit] = manual_append(buckets[digit], num)
         
-        list = []
+        index = 0
         for bucket in buckets:
-            list = manual_extend(list, bucket)
+            for num in bucket:
+                output[index] = num
+                index += 1
+
+        for i in range(n):
+            list[i] = output[i]
         
         exp *= 10
     
