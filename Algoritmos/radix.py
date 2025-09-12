@@ -32,43 +32,13 @@ def manual_extend(lst1, lst2):
         new_lst[manual_len(lst1) + i] = lst2[i]
     return new_lst
 
-# def radix_sort(list:list[int]):
-#     if not list:
-#         return list
-
-#     max_val = manual_max(list)
-#     n = manual_len(list)
-#     output = [0] * n
-
-#     exp = 1
-#     while max_val // exp > 0:
-#         buckets = [[] for _ in range(10)]
-        
-#         for num in list:
-#             digit = (num // exp) % 10
-#             buckets[digit] = manual_append(buckets[digit], num)
-        
-#         index = 0
-#         for bucket in buckets:
-#             for num in bucket:
-#                 output[index] = num
-#                 index += 1
-
-#         for i in range(n):
-#             list[i] = output[i]
-        
-#         exp *= 10
-    
-#     return list
-
-
-
-
 def radix_sort(list:list[int]):
     if not list:
         return list
 
     max_val = manual_max(list)
+    n = manual_len(list)
+    output = [0] * n
 
     exp = 1
     while max_val // exp > 0:
@@ -78,13 +48,43 @@ def radix_sort(list:list[int]):
             digit = (num // exp) % 10
             buckets[digit] = manual_append(buckets[digit], num)
         
-        list = []
+        index = 0
         for bucket in buckets:
-            list = manual_extend(list, bucket)
+            for num in bucket:
+                output[index] = num
+                index += 1
+
+        for i in range(n):
+            list[i] = output[i]
         
         exp *= 10
     
     return list
+
+
+
+
+# def radix_sort(list:list[int]):
+#     if not list:
+#         return list
+
+#     max_val = manual_max(list)
+
+#     exp = 1
+#     while max_val // exp > 0:
+#         buckets = [[] for _ in range(10)]
+        
+#         for num in list:
+#             digit = (num // exp) % 10
+#             buckets[digit] = manual_append(buckets[digit], num)
+        
+#         list = []
+#         for bucket in buckets:
+#             list = manual_extend(list, bucket)
+        
+#         exp *= 10
+    
+#     return list
 
 # # Exemplo de uso
 # if __name__ == "__main__":
