@@ -73,12 +73,12 @@ def executar_testes_coktail():
         
         print()
 
-def executar_testes_radix():
-    
-    print("=========Iniciando testes do Radix Sort=========\n")
-    
-    
-    Manipulador_arquivos_txt.escrever_no_arquivo(f'Resultados/Resultados_radix.txt',
+def executar_testes_radix_counting():
+
+    print("=========Iniciando testes do Radix Sort Counting=========\n")
+
+
+    Manipulador_arquivos_txt.escrever_no_arquivo(f'Resultados/Resultados_radix_counting.txt',
                                                  "Nota: Os tempos apresentados sao a media dos tempos de 10 execucoes para cada lista.\n\n")
 
     #Para cada quantidade ler o arquivo correspondente (Ja padronizado na funcao de gerar arquivos so mudando a quantidade)
@@ -92,7 +92,7 @@ def executar_testes_radix():
         def testar_lista(tipo_lista:str, lista:list[int]):
                 cronometro = Cronometro.Cronometro()
                 cronometro.iniciar()
-                Radix.radix_sort(lista)
+                Radix.radix_sort_counting(lista)
                 cronometro.parar()
                 tempo_segundos = cronometro.tempo_segundos()
                 print(f"Tempo de execução do Radix Sort para lista {tipo_lista} com {i} elementos: {tempo_segundos} segundos")
@@ -116,8 +116,8 @@ def executar_testes_radix():
             resultado_aleatoria += testar_lista("aleatória", lista_aux)
 
         print()
-        
-        Manipulador_arquivos_txt.escrever_no_arquivo(f'Resultados/Resultados_radix.txt',
+
+        Manipulador_arquivos_txt.escrever_no_arquivo(f'Resultados/Resultados_radix_counting.txt',
                                                      f"Resultados do Radix Sort para listas com {i} elementos:\n\n"
                                                      f"Lista crescente: {resultado_crescente/10} segundos\n"
                                                      f"Lista decrescente: {resultado_decrescente/10} segundos\n"
@@ -126,6 +126,58 @@ def executar_testes_radix():
         
         print()
 
+def executar_testes_radix_bucket():
+
+    print("=========Iniciando testes do Radix Sort Bucket=========\n")
+
+
+    Manipulador_arquivos_txt.escrever_no_arquivo(f'Resultados/Resultados_radix_bucket.txt',
+                                                 "Nota: Os tempos apresentados sao a media dos tempos de 10 execucoes para cada lista.\n\n")
+
+    #Para cada quantidade ler o arquivo correspondente (Ja padronizado na funcao de gerar arquivos so mudando a quantidade)
+    for i in lista_quantidade_de_testes:
+        
+        lista_crescente = Manipulador_arquivos_txt.ler_numeros_do_arquivo(f'Arquivos_testes/crescentes_{i}.txt')
+        lista_decrescente = Manipulador_arquivos_txt.ler_numeros_do_arquivo(f'Arquivos_testes/decrescentes_{i}.txt')
+        lista_aleatoria = Manipulador_arquivos_txt.ler_numeros_do_arquivo(f'Arquivos_testes/aleatorios_{i}.txt')
+        
+        
+        def testar_lista(tipo_lista:str, lista:list[int]):
+                cronometro = Cronometro.Cronometro()
+                cronometro.iniciar()
+                Radix.radix_sort_bucket(lista)
+                cronometro.parar()
+                tempo_segundos = cronometro.tempo_segundos()
+                print(f"Tempo de execução do Radix Sort para lista {tipo_lista} com {i} elementos: {tempo_segundos} segundos")
+                cronometro.resetar()
+
+                return tempo_segundos
+        
+        #testar 10 vezes cada para ter uma media
+        resultado_crescente = 0.0
+        resultado_decrescente = 0.0
+        resultado_aleatoria = 0.0
+        
+        for j in range(10):
+            print(f"\nTeste {j+1} de 10 para listas com {i} elementos.\n")
+            #copia a lista para nao ordenar a original e poder usar nas outras ordenacoes
+            lista_aux = lista_decrescente.copy()
+            #A crescente nao precisa de copia pq nunca sera alterada
+            resultado_crescente += testar_lista("crescente", lista_crescente)
+            resultado_decrescente += testar_lista("decrescente", lista_aux)
+            lista_aux = lista_aleatoria.copy()
+            resultado_aleatoria += testar_lista("aleatória", lista_aux)
+
+        print()
+
+        Manipulador_arquivos_txt.escrever_no_arquivo(f'Resultados/Resultados_radix_bucket.txt',
+                                                     f"Resultados do Radix Sort para listas com {i} elementos:\n\n"
+                                                     f"Lista crescente: {resultado_crescente/10} segundos\n"
+                                                     f"Lista decrescente: {resultado_decrescente/10} segundos\n"
+                                                     f"Lista aleatoria: {resultado_aleatoria/10} segundos\n\n"
+                                                     f"---------------------------------\n\n")
+        
+        print()
 
 
 def gerar_graficos():
@@ -141,7 +193,7 @@ def gerar_graficos():
         print("pip install matplotlib numpy")
     except Exception as e:
         print(f"\nErro ao gerar gráficos: {e}")
-        print("Verifique se o diretório 'Resultados' existe e se você tem permissão para escrever nele.")
+        print("Verifique se os arquivos de resultados existem e se você tem permissão para escrever no diretório 'Resultados'.")
         
 def gerar_graficos_pequenos():
     try:
@@ -170,33 +222,39 @@ def gerar_tabelas():
         print("Verifique se o diretório 'Resultados' existe e se você tem permissão para escrever nele.")
         
 
-# if __name__ == '__main__':
+if __name__ == '__main__':
     
     # gerar_arquivos_de_teste()
     # print("\n---------------------------------\n")
     # # Manipulador_arquivos_txt.limpar_arquivo(f'Resultados/Resultados_coktail.txt')
     # executar_testes_coktail()
-    print("\n---------------------------------\n")
-    Manipulador_arquivos_txt.limpar_arquivo(f'Resultados/Resultados_radix.txt')
-    executar_testes_radix()
     
+    
+    # print("\n---------------------------------\n")
+    # # Manipulador_arquivos_txt.limpar_arquivo(f'Resultados/Resultados_radix_counting.txt')
+    # executar_testes_radix_counting()
+    
+    
+    # print("\n---------------------------------\n")
+    # Manipulador_arquivos_txt.limpar_arquivo(f'Resultados/Resultados_radix_bucket.txt')
+    # executar_testes_radix_bucket()
+
     
     # Perguntar ao usuário se deseja gerar os gráficos
-    # gerar_grafs = input("\nDeseja gerar gráficos dos resultados? (s/n): ")
-    # if gerar_grafs.lower() == 's':
-    #     gerar_graficos()
+    gerar_grafs = input("\nDeseja gerar gráficos dos resultados? (s/n): ")
+    if gerar_grafs.lower() == 's':
+        gerar_graficos()
         
-    # # Perguntar se deseja gerar gráficos apenas com dados pequenos
-    # gerar_pequenos = input("\nDeseja gerar gráficos apenas com dados de listas pequenas (100, 500, 1000)? (s/n): ")
-    # if gerar_pequenos.lower() == 's':
-    #     gerar_graficos_pequenos()
+    # Perguntar se deseja gerar gráficos apenas com dados pequenos
+    gerar_pequenos = input("\nDeseja gerar gráficos apenas com dados de listas pequenas (100, 500, 1000)? (s/n): ")
+    if gerar_pequenos.lower() == 's':
+        gerar_graficos_pequenos()
             
-    # # Perguntar se deseja gerar tabelas PNG
-    # gerar_tabs = input("\nDeseja gerar tabelas PNG com os resultados? (s/n): ")
-    # if gerar_tabs.lower() == 's':
-    #     gerar_tabelas()
-    
-    
-    
-    
-    
+    # Perguntar se deseja gerar tabelas PNG
+    gerar_tabs = input("\nDeseja gerar tabelas PNG com os resultados? (s/n): ")
+    if gerar_tabs.lower() == 's':
+        gerar_tabelas()
+
+
+
+

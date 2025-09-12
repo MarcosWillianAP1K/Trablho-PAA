@@ -60,83 +60,159 @@ def formatar_valor(valor):
 
 def gerar_grafico_comparativo_algoritmos():
     """
-    Gera um gráfico comparando o desempenho dos algoritmos Cocktail Sort e Radix Sort
+    Gera gráficos comparando o desempenho do Cocktail Sort com ambas as variações do Radix Sort
     para diferentes tamanhos e tipos de listas.
     """
-    # Use absolute paths to ensure correct file location
     import os
     base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     dados_cocktail = extrair_dados_arquivo(os.path.join(base_dir, 'Resultados', 'Resultados_coktail.txt'))
-    dados_radix = extrair_dados_arquivo(os.path.join(base_dir, 'Resultados', 'Resultados_radix.txt'))
+    dados_radix_counting = extrair_dados_arquivo(os.path.join(base_dir, 'Resultados', 'Resultados_radix_counting.txt'))
+    dados_radix_bucket = extrair_dados_arquivo(os.path.join(base_dir, 'Resultados', 'Resultados_radix_bucket.txt'))
     
     # Verificar se foram extraídos dados
-    if not dados_cocktail or not dados_radix:
-        print("Erro: Não foi possível extrair dados dos arquivos de resultado")
+    if not dados_cocktail:
+        print("Erro: Não foi possível extrair dados do Cocktail Sort")
         return
-    
-    # Garantir que estamos comparando os mesmos tamanhos
-    tamanhos_comuns = sorted(set(dados_cocktail.keys()) & set(dados_radix.keys()))
-    
-    if not tamanhos_comuns:
-        print("Erro: Não há tamanhos de lista comuns entre os algoritmos")
-        return
-    
-    # Preparar os dados para o gráfico
+        
+    # Tipos de lista e seus rótulos
     tipos_lista = ['crescente', 'decrescente', 'aleatorio']
     rotulos_tipos = ['Crescente', 'Decrescente', 'Aleatória']
     
-    # Configurar o gráfico
-    plt.figure(figsize=(15, 10))
+    # ----------------------- Comparação Cocktail vs Radix Counting -----------------------
+    if dados_radix_counting:
+        tamanhos_comuns = sorted(set(dados_cocktail.keys()) & set(dados_radix_counting.keys()))
+        
+        if tamanhos_comuns:
+            plt.figure(figsize=(15, 10))
+            
+            for i, (tipo, rotulo) in enumerate(zip(tipos_lista, rotulos_tipos)):
+                plt.subplot(1, 3, i+1)
+                
+                x = tamanhos_comuns
+                y_cocktail = [dados_cocktail[tamanho][tipo] for tamanho in tamanhos_comuns]
+                y_radix = [dados_radix_counting[tamanho][tipo] for tamanho in tamanhos_comuns]
+                
+                plt.plot(x, y_cocktail, 'b-o', label='Cocktail Sort')
+                plt.plot(x, y_radix, 'r-s', label='Radix Sort (Counting)')
+                
+                # Adicionar os valores em cada ponto
+                for j, (xval, yval) in enumerate(zip(x, y_cocktail)):
+                    texto = formatar_valor(yval)
+                    plt.annotate(texto, (xval, yval), xytext=(0, 10), 
+                                 textcoords='offset points', ha='center', fontsize=8)
+                
+                for j, (xval, yval) in enumerate(zip(x, y_radix)):
+                    texto = formatar_valor(yval)
+                    plt.annotate(texto, (xval, yval), xytext=(0, -15), 
+                                 textcoords='offset points', ha='center', fontsize=8)
+                
+                plt.title(f'Comparação para Lista {rotulo}')
+                plt.xlabel('Tamanho da Lista')
+                plt.ylabel('Tempo de Execução (segundos)')
+                plt.grid(True)
+                plt.legend()
+                plt.xticks(tamanhos_comuns)
+                
+            plt.tight_layout()
+            save_path = os.path.join(base_dir, 'Resultados', 'comparacao_cocktail_radix_counting.png')
+            plt.savefig(save_path)
+            print(f"Gráfico de comparação Cocktail vs Radix Counting gerado: '{save_path}'")
     
-    # Para cada tipo de lista (crescente, decrescente, aleatória)
-    for i, (tipo, rotulo) in enumerate(zip(tipos_lista, rotulos_tipos)):
-        plt.subplot(1, 3, i+1)
+    # ----------------------- Comparação Cocktail vs Radix Bucket -----------------------
+    if dados_radix_bucket:
+        tamanhos_comuns = sorted(set(dados_cocktail.keys()) & set(dados_radix_bucket.keys()))
         
-        x = tamanhos_comuns
-        y_cocktail = [dados_cocktail[tamanho][tipo] for tamanho in tamanhos_comuns]
-        y_radix = [dados_radix[tamanho][tipo] for tamanho in tamanhos_comuns]
+        if tamanhos_comuns:
+            plt.figure(figsize=(15, 10))
+            
+            for i, (tipo, rotulo) in enumerate(zip(tipos_lista, rotulos_tipos)):
+                plt.subplot(1, 3, i+1)
+                
+                x = tamanhos_comuns
+                y_cocktail = [dados_cocktail[tamanho][tipo] for tamanho in tamanhos_comuns]
+                y_radix = [dados_radix_bucket[tamanho][tipo] for tamanho in tamanhos_comuns]
+                
+                plt.plot(x, y_cocktail, 'b-o', label='Cocktail Sort')
+                plt.plot(x, y_radix, 'g-^', label='Radix Sort (Bucket)')
+                
+                # Adicionar os valores em cada ponto
+                for j, (xval, yval) in enumerate(zip(x, y_cocktail)):
+                    texto = formatar_valor(yval)
+                    plt.annotate(texto, (xval, yval), xytext=(0, 10), 
+                                 textcoords='offset points', ha='center', fontsize=8)
+                
+                for j, (xval, yval) in enumerate(zip(x, y_radix)):
+                    texto = formatar_valor(yval)
+                    plt.annotate(texto, (xval, yval), xytext=(0, -15), 
+                                 textcoords='offset points', ha='center', fontsize=8)
+                
+                plt.title(f'Comparação para Lista {rotulo}')
+                plt.xlabel('Tamanho da Lista')
+                plt.ylabel('Tempo de Execução (segundos)')
+                plt.grid(True)
+                plt.legend()
+                plt.xticks(tamanhos_comuns)
+                
+            plt.tight_layout()
+            save_path = os.path.join(base_dir, 'Resultados', 'comparacao_cocktail_radix_bucket.png')
+            plt.savefig(save_path)
+            print(f"Gráfico de comparação Cocktail vs Radix Bucket gerado: '{save_path}'")
+
+    # ----------------------- Comparação das duas variações do Radix -----------------------
+    if dados_radix_counting and dados_radix_bucket:
+        tamanhos_comuns = sorted(set(dados_radix_counting.keys()) & set(dados_radix_bucket.keys()))
         
-        plt.plot(x, y_cocktail, 'b-o', label='Cocktail Sort')
-        plt.plot(x, y_radix, 'r-s', label='Radix Sort')
-        
-        # Adicionar os valores em cada ponto
-        for j, (xval, yval) in enumerate(zip(x, y_cocktail)):
-            texto = formatar_valor(yval)
-            plt.annotate(texto, (xval, yval), xytext=(0, 10), 
-                         textcoords='offset points', ha='center', fontsize=8)
-        
-        # Adicionar os valores para o Radix Sort (abaixo dos pontos para evitar sobreposição)
-        for j, (xval, yval) in enumerate(zip(x, y_radix)):
-            texto = formatar_valor(yval)
-            plt.annotate(texto, (xval, yval), xytext=(0, -15), 
-                         textcoords='offset points', ha='center', fontsize=8)
-        
-        plt.title(f'Comparação para Lista {rotulo}')
-        plt.xlabel('Tamanho da Lista')
-        plt.ylabel('Tempo de Execução (segundos)')
-        plt.grid(True)
-        plt.legend()
-        plt.xticks(tamanhos_comuns)
-        
-    plt.tight_layout()
-    save_path = os.path.join(base_dir, 'Resultados', 'comparacao_algoritmos.png')
-    plt.savefig(save_path)
-    print(f"Gráfico de comparação gerado com sucesso: '{save_path}'")
+        if tamanhos_comuns:
+            plt.figure(figsize=(15, 10))
+            
+            for i, (tipo, rotulo) in enumerate(zip(tipos_lista, rotulos_tipos)):
+                plt.subplot(1, 3, i+1)
+                
+                x = tamanhos_comuns
+                y_counting = [dados_radix_counting[tamanho][tipo] for tamanho in tamanhos_comuns]
+                y_bucket = [dados_radix_bucket[tamanho][tipo] for tamanho in tamanhos_comuns]
+                
+                plt.plot(x, y_counting, 'r-s', label='Radix Sort (Counting)')
+                plt.plot(x, y_bucket, 'g-^', label='Radix Sort (Bucket)')
+                
+                # Adicionar os valores em cada ponto
+                for j, (xval, yval) in enumerate(zip(x, y_counting)):
+                    texto = formatar_valor(yval)
+                    plt.annotate(texto, (xval, yval), xytext=(0, 10), 
+                                 textcoords='offset points', ha='center', fontsize=8)
+                
+                for j, (xval, yval) in enumerate(zip(x, y_bucket)):
+                    texto = formatar_valor(yval)
+                    plt.annotate(texto, (xval, yval), xytext=(0, -15), 
+                                 textcoords='offset points', ha='center', fontsize=8)
+                
+                plt.title(f'Comparação Radix - Lista {rotulo}')
+                plt.xlabel('Tamanho da Lista')
+                plt.ylabel('Tempo de Execução (segundos)')
+                plt.grid(True)
+                plt.legend()
+                plt.xticks(tamanhos_comuns)
+                
+            plt.tight_layout()
+            save_path = os.path.join(base_dir, 'Resultados', 'comparacao_radix_counting_bucket.png')
+            plt.savefig(save_path)
+            print(f"Gráfico de comparação entre variações do Radix gerado: '{save_path}'")
     
 def gerar_grafico_por_algoritmo():
     """
     Gera gráficos separados para cada algoritmo, mostrando o desempenho
     para diferentes tipos de lista.
     """
-    # Use absolute paths to ensure correct file location
     import os
     base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     dados_cocktail = extrair_dados_arquivo(os.path.join(base_dir, 'Resultados', 'Resultados_coktail.txt'))
-    dados_radix = extrair_dados_arquivo(os.path.join(base_dir, 'Resultados', 'Resultados_radix.txt'))
+    dados_radix_counting = extrair_dados_arquivo(os.path.join(base_dir, 'Resultados', 'Resultados_radix_counting.txt'))
+    dados_radix_bucket = extrair_dados_arquivo(os.path.join(base_dir, 'Resultados', 'Resultados_radix_bucket.txt'))
     
     algoritmos = [
         ('Cocktail Sort', dados_cocktail, 'cocktail'),
-        ('Radix Sort', dados_radix, 'radix')
+        ('Radix Sort (Counting)', dados_radix_counting, 'radix_counting'),
+        ('Radix Sort (Bucket)', dados_radix_bucket, 'radix_bucket')
     ]
     
     for nome, dados, arquivo in algoritmos:
@@ -185,125 +261,77 @@ def gerar_grafico_por_algoritmo():
 
 def gerar_grafico_barras_comparativo():
     """
-    Gera dois gráficos de barras separados, um para cada algoritmo (Cocktail e Radix),
+    Gera gráficos de barras separados para cada algoritmo,
     mostrando o desempenho para cada tamanho e tipo de lista.
     """
-    # Use absolute paths to ensure correct file location
     import os
     base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     dados_cocktail = extrair_dados_arquivo(os.path.join(base_dir, 'Resultados', 'Resultados_coktail.txt'))
-    dados_radix = extrair_dados_arquivo(os.path.join(base_dir, 'Resultados', 'Resultados_radix.txt'))
+    dados_radix_counting = extrair_dados_arquivo(os.path.join(base_dir, 'Resultados', 'Resultados_radix_counting.txt'))
+    dados_radix_bucket = extrair_dados_arquivo(os.path.join(base_dir, 'Resultados', 'Resultados_radix_bucket.txt'))
     
-    # Verificar se foram extraídos dados
-    if not dados_cocktail or not dados_radix:
-        print("Erro: Não foi possível extrair dados dos arquivos de resultado")
-        return
+    algoritmos = [
+        ('Cocktail Sort', dados_cocktail, 'cocktail'),
+        ('Radix Sort (Counting)', dados_radix_counting, 'radix_counting'),
+        ('Radix Sort (Bucket)', dados_radix_bucket, 'radix_bucket')
+    ]
     
-    # Garantir que estamos comparando os mesmos tamanhos
-    tamanhos_comuns = sorted(set(dados_cocktail.keys()) & set(dados_radix.keys()))
-    
-    if not tamanhos_comuns:
-        print("Erro: Não há tamanhos de lista comuns entre os algoritmos")
-        return
-    
-    # Definição das cores para os diferentes tipos de lista
     cores = ['#1f77b4', '#ff7f0e', '#2ca02c']  # Azul, Laranja, Verde
-    
-    # Tipos de lista e seus rótulos
     tipos_lista = ['crescente', 'decrescente', 'aleatorio']
     rotulos_tipos = ['Crescente', 'Decrescente', 'Aleatória']
     
-    # Largura da barra e posicionamento
-    n_tamanhos = len(tamanhos_comuns)
-    n_tipos = len(tipos_lista)
-    largura_total = 0.8  # Largura total disponível para cada tamanho
-    largura_barra = largura_total / n_tipos  # Largura de cada barra individual
-    
-    # Posições no eixo X
-    x_pos = np.arange(n_tamanhos)
-    
-    # ----------------------- Gráfico para o Cocktail Sort -----------------------
-    plt.figure(figsize=(12, 8))
-    
-    for i, (tipo, rotulo) in enumerate(zip(tipos_lista, rotulos_tipos)):
-        # Offset para posicionar as barras lado a lado em cada tamanho
-        offset = -largura_total/2 + largura_barra/2 + i * largura_barra
+    for nome, dados, arquivo in algoritmos:
+        if not dados:
+            continue
+            
+        tamanhos = sorted(dados.keys())
+        n_tamanhos = len(tamanhos)
+        n_tipos = len(tipos_lista)
+        largura_total = 0.8
+        largura_barra = largura_total / n_tipos
+        x_pos = np.arange(n_tamanhos)
         
-        # Extrair os dados de tempo para cada tamanho
-        tempos = [dados_cocktail[tamanho][tipo] for tamanho in tamanhos_comuns]
+        plt.figure(figsize=(12, 8))
         
-        # Plotar as barras
-        barras = plt.bar(x_pos + offset, tempos, largura_barra, 
-                color=cores[i], label=f'Lista {rotulo}')
+        for i, (tipo, rotulo) in enumerate(zip(tipos_lista, rotulos_tipos)):
+            offset = -largura_total/2 + largura_barra/2 + i * largura_barra
+            tempos = [dados[tamanho][tipo] for tamanho in tamanhos]
+            
+            barras = plt.bar(x_pos + offset, tempos, largura_barra, 
+                    color=cores[i], label=f'Lista {rotulo}')
+            
+            for j, barra in enumerate(barras):
+                altura = barra.get_height()
+                texto = formatar_valor(altura)
+                plt.text(barra.get_x() + barra.get_width()/2., altura + 0.01*max(tempos),
+                        texto, ha='center', va='bottom', fontsize=8, rotation=45)
         
-        # Adicionar os valores em cima de cada barra
-        for j, barra in enumerate(barras):
-            altura = barra.get_height()
-            texto = formatar_valor(altura)
-            plt.text(barra.get_x() + barra.get_width()/2., altura + 0.01*max(tempos),
-                    texto, ha='center', va='bottom', fontsize=8, rotation=45)
-    
-    # Configurações do gráfico
-    plt.title('Desempenho do Cocktail Sort por Tamanho e Tipo de Lista')
-    plt.xlabel('Tamanho da Lista')
-    plt.ylabel('Tempo de Execução (segundos)')
-    plt.xticks(x_pos, tamanhos_comuns)
-    plt.grid(True, axis='y')
-    plt.legend()
-    
-    plt.tight_layout()
-    save_path = os.path.join(base_dir, 'Resultados', 'barras_cocktail.png')
-    plt.savefig(save_path)
-    print(f"Gráfico de barras para Cocktail Sort gerado: '{save_path}'")
-    
-    # ----------------------- Gráfico para o Radix Sort -----------------------
-    plt.figure(figsize=(12, 8))
-    
-    for i, (tipo, rotulo) in enumerate(zip(tipos_lista, rotulos_tipos)):
-        # Offset para posicionar as barras lado a lado em cada tamanho
-        offset = -largura_total/2 + largura_barra/2 + i * largura_barra
+        plt.title(f'Desempenho do {nome} por Tamanho e Tipo de Lista')
+        plt.xlabel('Tamanho da Lista')
+        plt.ylabel('Tempo de Execução (segundos)')
+        plt.xticks(x_pos, tamanhos)
+        plt.grid(True, axis='y')
+        plt.legend()
         
-        # Extrair os dados de tempo para cada tamanho
-        tempos = [dados_radix[tamanho][tipo] for tamanho in tamanhos_comuns]
-        
-        # Plotar as barras
-        barras = plt.bar(x_pos + offset, tempos, largura_barra, 
-                color=cores[i], label=f'Lista {rotulo}')
-        
-        # Adicionar os valores em cima de cada barra
-        for j, barra in enumerate(barras):
-            altura = barra.get_height()
-            texto = formatar_valor(altura)
-            plt.text(barra.get_x() + barra.get_width()/2., altura + 0.01*max(tempos),
-                    texto, ha='center', va='bottom', fontsize=8, rotation=45)
-    
-    # Configurações do gráfico
-    plt.title('Desempenho do Radix Sort por Tamanho e Tipo de Lista')
-    plt.xlabel('Tamanho da Lista')
-    plt.ylabel('Tempo de Execução (segundos)')
-    plt.xticks(x_pos, tamanhos_comuns)
-    plt.grid(True, axis='y')
-    plt.legend()
-    
-    plt.tight_layout()
-    save_path = os.path.join(base_dir, 'Resultados', 'barras_radix.png')
-    plt.savefig(save_path)
-    print(f"Gráfico de barras para Radix Sort gerado: '{save_path}'")
+        plt.tight_layout()
+        save_path = os.path.join(base_dir, 'Resultados', f'barras_{arquivo}.png')
+        plt.savefig(save_path)
+        print(f"Gráfico de barras para {nome} gerado: '{save_path}'")
 
 def gerar_graficos_dados_pequenos():
     """
     Gera todos os gráficos (comparativo, por algoritmo e barras) utilizando
     apenas os dados dos testes com 100, 500 e 1000 elementos.
     """
-    # Use absolute paths to ensure correct file location
     import os
     base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     dados_cocktail = extrair_dados_arquivo(os.path.join(base_dir, 'Resultados', 'Resultados_coktail.txt'))
-    dados_radix = extrair_dados_arquivo(os.path.join(base_dir, 'Resultados', 'Resultados_radix.txt'))
+    dados_radix_counting = extrair_dados_arquivo(os.path.join(base_dir, 'Resultados', 'Resultados_radix_counting.txt'))
+    dados_radix_bucket = extrair_dados_arquivo(os.path.join(base_dir, 'Resultados', 'Resultados_radix_bucket.txt'))
     
     # Verificar se foram extraídos dados
-    if not dados_cocktail or not dados_radix:
-        print("Erro: Não foi possível extrair dados dos arquivos de resultado")
+    if not dados_cocktail:
+        print("Erro: Não foi possível extrair dados do Cocktail Sort")
         return
     
     # Filtrar apenas os tamanhos pequenos
@@ -311,64 +339,97 @@ def gerar_graficos_dados_pequenos():
     
     # Filtrar os dados para conter apenas os tamanhos pequenos
     dados_cocktail_filtrados = {k: v for k, v in dados_cocktail.items() if k in tamanhos_pequenos}
-    dados_radix_filtrados = {k: v for k, v in dados_radix.items() if k in tamanhos_pequenos}
+    dados_radix_counting_filtrados = {k: v for k, v in dados_radix_counting.items() if k in tamanhos_pequenos} if dados_radix_counting else {}
+    dados_radix_bucket_filtrados = {k: v for k, v in dados_radix_bucket.items() if k in tamanhos_pequenos} if dados_radix_bucket else {}
     
-    # Verificar se há dados para os tamanhos desejados
-    tamanhos_comuns = sorted(set(dados_cocktail_filtrados.keys()) & set(dados_radix_filtrados.keys()))
-    
-    if not tamanhos_comuns:
-        print("Erro: Não há dados para os tamanhos 100, 500 e 1000")
-        return
-    
-    print(f"Gerando gráficos apenas para os tamanhos: {tamanhos_comuns}")
-    
-    # ---------------- Gráfico comparativo (linha) ----------------
-    # Preparar os dados para o gráfico
     tipos_lista = ['crescente', 'decrescente', 'aleatorio']
     rotulos_tipos = ['Crescente', 'Decrescente', 'Aleatória']
     
-    # Configurar o gráfico
-    plt.figure(figsize=(15, 10))
+    # ----------------------- Comparação Cocktail vs Radix Counting (pequenos) -----------------------
+    if dados_radix_counting_filtrados:
+        tamanhos_comuns = sorted(set(dados_cocktail_filtrados.keys()) & set(dados_radix_counting_filtrados.keys()))
+        
+        if tamanhos_comuns:
+            plt.figure(figsize=(15, 10))
+            
+            for i, (tipo, rotulo) in enumerate(zip(tipos_lista, rotulos_tipos)):
+                plt.subplot(1, 3, i+1)
+                
+                x = tamanhos_comuns
+                y_cocktail = [dados_cocktail_filtrados[tamanho][tipo] for tamanho in tamanhos_comuns]
+                y_radix = [dados_radix_counting_filtrados[tamanho][tipo] for tamanho in tamanhos_comuns]
+                
+                plt.plot(x, y_cocktail, 'b-o', label='Cocktail Sort')
+                plt.plot(x, y_radix, 'r-s', label='Radix Sort (Counting)')
+                
+                # Adicionar os valores em cada ponto
+                for j, (xval, yval) in enumerate(zip(x, y_cocktail)):
+                    texto = formatar_valor(yval)
+                    plt.annotate(texto, (xval, yval), xytext=(0, 10), 
+                                 textcoords='offset points', ha='center', fontsize=8)
+                                 
+                for j, (xval, yval) in enumerate(zip(x, y_radix)):
+                    texto = formatar_valor(yval)
+                    plt.annotate(texto, (xval, yval), xytext=(0, -15), 
+                                 textcoords='offset points', ha='center', fontsize=8)
+                
+                plt.title(f'Comparação para Lista {rotulo} (Dados Pequenos)')
+                plt.xlabel('Tamanho da Lista')
+                plt.ylabel('Tempo de Execução (segundos)')
+                plt.grid(True)
+                plt.legend()
+                plt.xticks(tamanhos_comuns)
+                
+            plt.tight_layout()
+            save_path = os.path.join(base_dir, 'Resultados', 'comparacao_cocktail_radix_counting_pequenos.png')
+            plt.savefig(save_path)
+            print(f"Gráfico de comparação Cocktail vs Radix Counting (dados pequenos) gerado: '{save_path}'")
     
-    # Para cada tipo de lista (crescente, decrescente, aleatória)
-    for i, (tipo, rotulo) in enumerate(zip(tipos_lista, rotulos_tipos)):
-        plt.subplot(1, 3, i+1)
+    # ----------------------- Comparação Cocktail vs Radix Bucket (pequenos) -----------------------
+    if dados_radix_bucket_filtrados:
+        tamanhos_comuns = sorted(set(dados_cocktail_filtrados.keys()) & set(dados_radix_bucket_filtrados.keys()))
         
-        x = tamanhos_comuns
-        y_cocktail = [dados_cocktail_filtrados[tamanho][tipo] for tamanho in tamanhos_comuns]
-        y_radix = [dados_radix_filtrados[tamanho][tipo] for tamanho in tamanhos_comuns]
-        
-        plt.plot(x, y_cocktail, 'b-o', label='Cocktail Sort')
-        plt.plot(x, y_radix, 'r-s', label='Radix Sort')
-        
-        # Adicionar os valores em cada ponto para o Cocktail Sort
-        for j, (xval, yval) in enumerate(zip(x, y_cocktail)):
-            texto = formatar_valor(yval)
-            plt.annotate(texto, (xval, yval), xytext=(0, 10), 
-                         textcoords='offset points', ha='center', fontsize=8)
-                         
-        # Adicionar os valores em cada ponto para o Radix Sort
-        for j, (xval, yval) in enumerate(zip(x, y_radix)):
-            texto = formatar_valor(yval)
-            plt.annotate(texto, (xval, yval), xytext=(0, -15), 
-                         textcoords='offset points', ha='center', fontsize=8)
-        
-        plt.title(f'Comparação para Lista {rotulo} (Dados Pequenos)')
-        plt.xlabel('Tamanho da Lista')
-        plt.ylabel('Tempo de Execução (segundos)')
-        plt.grid(True)
-        plt.legend()
-        plt.xticks(tamanhos_comuns)
-        
-    plt.tight_layout()
-    save_path = os.path.join(base_dir, 'Resultados', 'comparacao_algoritmos_pequenos.png')
-    plt.savefig(save_path)
-    print(f"Gráfico de comparação (dados pequenos) gerado: '{save_path}'")
+        if tamanhos_comuns:
+            plt.figure(figsize=(15, 10))
+            
+            for i, (tipo, rotulo) in enumerate(zip(tipos_lista, rotulos_tipos)):
+                plt.subplot(1, 3, i+1)
+                
+                x = tamanhos_comuns
+                y_cocktail = [dados_cocktail_filtrados[tamanho][tipo] for tamanho in tamanhos_comuns]
+                y_radix = [dados_radix_bucket_filtrados[tamanho][tipo] for tamanho in tamanhos_comuns]
+                
+                plt.plot(x, y_cocktail, 'b-o', label='Cocktail Sort')
+                plt.plot(x, y_radix, 'g-^', label='Radix Sort (Bucket)')
+                
+                # Adicionar os valores em cada ponto
+                for j, (xval, yval) in enumerate(zip(x, y_cocktail)):
+                    texto = formatar_valor(yval)
+                    plt.annotate(texto, (xval, yval), xytext=(0, 10), 
+                                 textcoords='offset points', ha='center', fontsize=8)
+                                 
+                for j, (xval, yval) in enumerate(zip(x, y_radix)):
+                    texto = formatar_valor(yval)
+                    plt.annotate(texto, (xval, yval), xytext=(0, -15), 
+                                 textcoords='offset points', ha='center', fontsize=8)
+                
+                plt.title(f'Comparação para Lista {rotulo} (Dados Pequenos)')
+                plt.xlabel('Tamanho da Lista')
+                plt.ylabel('Tempo de Execução (segundos)')
+                plt.grid(True)
+                plt.legend()
+                plt.xticks(tamanhos_comuns)
+                
+            plt.tight_layout()
+            save_path = os.path.join(base_dir, 'Resultados', 'comparacao_cocktail_radix_bucket_pequenos.png')
+            plt.savefig(save_path)
+            print(f"Gráfico de comparação Cocktail vs Radix Bucket (dados pequenos) gerado: '{save_path}'")
     
     # ---------------- Gráficos por algoritmo (linha) ----------------
     algoritmos = [
         ('Cocktail Sort', dados_cocktail_filtrados, 'cocktail'),
-        ('Radix Sort', dados_radix_filtrados, 'radix')
+        ('Radix Sort (Counting)', dados_radix_counting_filtrados, 'radix_counting'),
+        ('Radix Sort (Bucket)', dados_radix_bucket_filtrados, 'radix_bucket')
     ]
     
     for nome, dados, arquivo in algoritmos:
@@ -462,7 +523,7 @@ def gerar_graficos_dados_pequenos():
     plt.savefig(save_path)
     print(f"Gráfico de barras para Cocktail Sort (dados pequenos) gerado: '{save_path}'")
     
-    # ----------------------- Gráfico para o Radix Sort -----------------------
+    # ----------------------- Gráfico para o Radix Sort (Counting) -----------------------
     plt.figure(figsize=(12, 8))
     
     for i, (tipo, rotulo) in enumerate(zip(tipos_lista, rotulos_tipos)):
@@ -470,7 +531,7 @@ def gerar_graficos_dados_pequenos():
         offset = -largura_total/2 + largura_barra/2 + i * largura_barra
         
         # Extrair os dados de tempo para cada tamanho
-        tempos = [dados_radix_filtrados[tamanho][tipo] for tamanho in tamanhos_comuns]
+        tempos = [dados_radix_counting_filtrados[tamanho][tipo] for tamanho in tamanhos_comuns]
         
         # Plotar as barras
         barras = plt.bar(x_pos + offset, tempos, largura_barra, 
@@ -484,7 +545,7 @@ def gerar_graficos_dados_pequenos():
                     texto, ha='center', va='bottom', fontsize=8, rotation=45)
     
     # Configurações do gráfico
-    plt.title('Desempenho do Radix Sort por Tamanho e Tipo de Lista (Dados Pequenos)')
+    plt.title('Desempenho do Radix Sort (Counting) por Tamanho e Tipo de Lista (Dados Pequenos)')
     plt.xlabel('Tamanho da Lista')
     plt.ylabel('Tempo de Execução (segundos)')
     plt.xticks(x_pos, tamanhos_comuns)
@@ -492,9 +553,43 @@ def gerar_graficos_dados_pequenos():
     plt.legend()
     
     plt.tight_layout()
-    save_path = os.path.join(base_dir, 'Resultados', 'barras_radix_pequenos.png')
+    save_path = os.path.join(base_dir, 'Resultados', 'barras_radix_counting_pequenos.png')
     plt.savefig(save_path)
-    print(f"Gráfico de barras para Radix Sort (dados pequenos) gerado: '{save_path}'")
+    print(f"Gráfico de barras para Radix Sort (Counting) (dados pequenos) gerado: '{save_path}'")
+    
+    # ----------------------- Gráfico para o Radix Sort (Bucket) -----------------------
+    plt.figure(figsize=(12, 8))
+    
+    for i, (tipo, rotulo) in enumerate(zip(tipos_lista, rotulos_tipos)):
+        # Offset para posicionar as barras lado a lado em cada tamanho
+        offset = -largura_total/2 + largura_barra/2 + i * largura_barra
+        
+        # Extrair os dados de tempo para cada tamanho
+        tempos = [dados_radix_bucket_filtrados[tamanho][tipo] for tamanho in tamanhos_comuns]
+        
+        # Plotar as barras
+        barras = plt.bar(x_pos + offset, tempos, largura_barra, 
+                color=cores[i], label=f'Lista {rotulo}')
+        
+        # Adicionar os valores em cima de cada barra
+        for j, barra in enumerate(barras):
+            altura = barra.get_height()
+            texto = formatar_valor(altura)
+            plt.text(barra.get_x() + barra.get_width()/2., altura + 0.01*max(tempos),
+                    texto, ha='center', va='bottom', fontsize=8, rotation=45)
+    
+    # Configurações do gráfico
+    plt.title('Desempenho do Radix Sort (Bucket) por Tamanho e Tipo de Lista (Dados Pequenos)')
+    plt.xlabel('Tamanho da Lista')
+    plt.ylabel('Tempo de Execução (segundos)')
+    plt.xticks(x_pos, tamanhos_comuns)
+    plt.grid(True, axis='y')
+    plt.legend()
+    
+    plt.tight_layout()
+    save_path = os.path.join(base_dir, 'Resultados', 'barras_radix_bucket_pequenos.png')
+    plt.savefig(save_path)
+    print(f"Gráfico de barras para Radix Sort (Bucket) (dados pequenos) gerado: '{save_path}'")
     
     print("\nTodos os gráficos com dados pequenos foram gerados com sucesso!")
 
@@ -508,16 +603,18 @@ def gerar_tabelas_html():
     import os
     base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     dados_cocktail = extrair_dados_arquivo(os.path.join(base_dir, 'Resultados', 'Resultados_coktail.txt'))
-    dados_radix = extrair_dados_arquivo(os.path.join(base_dir, 'Resultados', 'Resultados_radix.txt'))
+    dados_radix_counting = extrair_dados_arquivo(os.path.join(base_dir, 'Resultados', 'Resultados_radix_counting.txt'))
+    dados_radix_bucket = extrair_dados_arquivo(os.path.join(base_dir, 'Resultados', 'Resultados_radix_bucket.txt'))
     
     # Verificar se foram extraídos dados
-    if not dados_cocktail or not dados_radix:
-        print("Erro: Não foi possível extrair dados dos arquivos de resultado")
+    if not dados_cocktail:
+        print("Erro: Não foi possível extrair dados do Cocktail Sort")
         return
     
     algoritmos = [
         ('Cocktail Sort', dados_cocktail, 'cocktail'),
-        ('Radix Sort', dados_radix, 'radix')
+        ('Radix Sort (Counting)', dados_radix_counting, 'radix_counting'),
+        ('Radix Sort (Bucket)', dados_radix_bucket, 'radix_bucket')
     ]
     
     # Estilos CSS para a tabela
@@ -628,7 +725,7 @@ def gerar_tabelas_html():
     """
     
     # Lista de tamanhos comuns para comparação
-    tamanhos_comuns = sorted(set(dados_cocktail.keys()) & set(dados_radix.keys()))
+    tamanhos_comuns = sorted(set(dados_cocktail.keys()) & set(dados_radix_counting.keys()) & set(dados_radix_bucket.keys()))
     
     # Para cada tipo de lista, criar uma tabela separada
     tipos = [('crescente', 'Lista Crescente'), ('decrescente', 'Lista Decrescente'), ('aleatorio', 'Lista Aleatória')]
@@ -640,25 +737,32 @@ def gerar_tabelas_html():
             <tr>
                 <th>Tamanho da Lista</th>
                 <th>Cocktail Sort (s)</th>
-                <th>Radix Sort (s)</th>
+                <th>Radix Sort (Counting) (s)</th>
+                <th>Radix Sort (Bucket) (s)</th>
                 <th>Diferença (s)</th>
-                <th>Cocktail/Radix</th>
+                <th>Cocktail/Radix Counting</th>
+                <th>Cocktail/Radix Bucket</th>
             </tr>
         """
         
         for tamanho in tamanhos_comuns:
             tempo_cocktail = dados_cocktail[tamanho][tipo]
-            tempo_radix = dados_radix[tamanho][tipo]
-            diferenca = tempo_cocktail - tempo_radix
-            razao = tempo_cocktail / tempo_radix if tempo_radix > 0 else float('inf')
+            tempo_radix_counting = dados_radix_counting[tamanho][tipo]
+            tempo_radix_bucket = dados_radix_bucket[tamanho][tipo]
+            diferenca_counting = tempo_cocktail - tempo_radix_counting
+            diferenca_bucket = tempo_cocktail - tempo_radix_bucket
+            razao_counting = tempo_cocktail / tempo_radix_counting if tempo_radix_counting > 0 else float('inf')
+            razao_bucket = tempo_cocktail / tempo_radix_bucket if tempo_radix_bucket > 0 else float('inf')
             
             html_comparativo += f"""
             <tr>
                 <td>{tamanho}</td>
                 <td>{formatar_valor(tempo_cocktail)}</td>
-                <td>{formatar_valor(tempo_radix)}</td>
-                <td>{formatar_valor(diferenca)}</td>
-                <td>{formatar_valor(razao)}</td>
+                <td>{formatar_valor(tempo_radix_counting)}</td>
+                <td>{formatar_valor(tempo_radix_bucket)}</td>
+                <td>{formatar_valor(diferenca_counting)}</td>
+                <td>{formatar_valor(razao_counting)}</td>
+                <td>{formatar_valor(razao_bucket)}</td>
             </tr>
             """
         
@@ -683,22 +787,18 @@ def gerar_tabelas_png():
     Gera tabelas como imagens PNG com os resultados dos algoritmos, mostrando o tamanho
     das listas na primeira coluna e os tipos de listas nas colunas.
     """
-    # Use absolute paths to ensure correct file location
     import os
     from matplotlib.table import Table
     
     base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     dados_cocktail = extrair_dados_arquivo(os.path.join(base_dir, 'Resultados', 'Resultados_coktail.txt'))
-    dados_radix = extrair_dados_arquivo(os.path.join(base_dir, 'Resultados', 'Resultados_radix.txt'))
-    
-    # Verificar se foram extraídos dados
-    if not dados_cocktail or not dados_radix:
-        print("Erro: Não foi possível extrair dados dos arquivos de resultado")
-        return
+    dados_radix_counting = extrair_dados_arquivo(os.path.join(base_dir, 'Resultados', 'Resultados_radix_counting.txt'))
+    dados_radix_bucket = extrair_dados_arquivo(os.path.join(base_dir, 'Resultados', 'Resultados_radix_bucket.txt'))
     
     algoritmos = [
         ('Cocktail Sort', dados_cocktail, 'cocktail'),
-        ('Radix Sort', dados_radix, 'radix')
+        ('Radix Sort (Counting)', dados_radix_counting, 'radix_counting'),
+        ('Radix Sort (Bucket)', dados_radix_bucket, 'radix_bucket')
     ]
     
     # Gerar uma tabela para cada algoritmo
@@ -768,7 +868,7 @@ def gerar_tabelas_png():
     
     # Criar tabelas comparativas separadas por tipo de lista
     tipos = [('crescente', 'Lista Crescente'), ('decrescente', 'Lista Decrescente'), ('aleatorio', 'Lista Aleatória')]
-    tamanhos_comuns = sorted(set(dados_cocktail.keys()) & set(dados_radix.keys()))
+    tamanhos_comuns = sorted(set(dados_cocktail.keys()) & set(dados_radix_counting.keys()) & set(dados_radix_bucket.keys()))
     
     for tipo, titulo in tipos:
         fig_height = max(6, 3 + len(tamanhos_comuns) * 0.4)
@@ -781,16 +881,21 @@ def gerar_tabelas_png():
         cell_text = []
         for tamanho in tamanhos_comuns:
             tempo_cocktail = dados_cocktail[tamanho][tipo]
-            tempo_radix = dados_radix[tamanho][tipo]
-            diferenca = tempo_cocktail - tempo_radix
-            razao = tempo_cocktail / tempo_radix if tempo_radix > 0 else float('inf')
+            tempo_radix_counting = dados_radix_counting[tamanho][tipo]
+            tempo_radix_bucket = dados_radix_bucket[tamanho][tipo]
+            diferenca_counting = tempo_cocktail - tempo_radix_counting
+            diferenca_bucket = tempo_cocktail - tempo_radix_bucket
+            razao_counting = tempo_cocktail / tempo_radix_counting if tempo_radix_counting > 0 else float('inf')
+            razao_bucket = tempo_cocktail / tempo_radix_bucket if tempo_radix_bucket > 0 else float('inf')
             
             row = [
                 f"{tamanho}",
                 formatar_valor(tempo_cocktail),
-                formatar_valor(tempo_radix),
-                formatar_valor(diferenca),
-                formatar_valor(razao)
+                formatar_valor(tempo_radix_counting),
+                formatar_valor(tempo_radix_bucket),
+                formatar_valor(diferenca_counting),
+                formatar_valor(razao_counting),
+                formatar_valor(razao_bucket)
             ]
             cell_text.append(row)
         
@@ -798,9 +903,11 @@ def gerar_tabelas_png():
         comp_headers = [
             'Tamanho da Lista',
             'Cocktail Sort (s)',
-            'Radix Sort (s)',
+            'Radix Sort (Counting) (s)',
+            'Radix Sort (Bucket) (s)',
             'Diferença (s)',
-            'Cocktail/Radix'
+            'Cocktail/Radix Counting',
+            'Cocktail/Radix Bucket'
         ]
         
         # Criar a tabela
@@ -834,30 +941,30 @@ def gerar_tabelas_png():
         print(f"Tabela comparativa PNG para {titulo} gerada: '{save_path}'")
         plt.close()
 
-# Executar as funções de geração de gráficos
-if __name__ == "__main__":
-    # Verificar se o diretório de resultados existe
-    base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    resultados_dir = os.path.join(base_dir, 'Resultados')
-    if not os.path.exists(resultados_dir):
-        os.makedirs(resultados_dir)
+# # Executar as funções de geração de gráficos
+# if __name__ == "__main__":
+#     # Verificar se o diretório de resultados existe
+#     base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+#     resultados_dir = os.path.join(base_dir, 'Resultados')
+#     if not os.path.exists(resultados_dir):
+#         os.makedirs(resultados_dir)
         
-    print("Gerando gráficos de comparação...")
-    gerar_grafico_comparativo_algoritmos()
+#     print("Gerando gráficos de comparação...")
+#     gerar_grafico_comparativo_algoritmos()
     
-    print("\nGerando gráficos de desempenho por algoritmo...")
-    gerar_grafico_por_algoritmo()
+#     print("\nGerando gráficos de desempenho por algoritmo...")
+#     gerar_grafico_por_algoritmo()
     
-    print("\nGerando gráficos de barras comparativos...")
-    gerar_grafico_barras_comparativo()
+#     print("\nGerando gráficos de barras comparativos...")
+#     gerar_grafico_barras_comparativo()
     
-    print("\nGerando gráficos para dados pequenos...")
-    gerar_graficos_dados_pequenos()
+#     print("\nGerando gráficos para dados pequenos...")
+#     gerar_graficos_dados_pequenos()
     
-    print("\nGerando tabelas HTML...")
-    gerar_tabelas_html()
+#     print("\nGerando tabelas HTML...")
+#     gerar_tabelas_html()
     
-    print("\nGerando tabelas PNG...")
-    gerar_tabelas_png()
+#     print("\nGerando tabelas PNG...")
+#     gerar_tabelas_png()
     
-    print("\nTodos os gráficos e tabelas foram gerados com sucesso!")
+#     print("\nTodos os gráficos e tabelas foram gerados com sucesso!")

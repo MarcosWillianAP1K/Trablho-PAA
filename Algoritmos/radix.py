@@ -32,48 +32,48 @@ def manual_extend(lst1, lst2):
         new_lst[manual_len(lst1) + i] = lst2[i]
     return new_lst
 
-# def radix_sort(list:list[int]):
-#     if not list:
-#         return list
+def radix_sort_bucket(list:list[int]):
+    if not list:
+        return list
 
-#     max_val = manual_max(list)
-#     n = manual_len(list)
-#     output = [0] * n
+    max_val = manual_max(list)
+    n = manual_len(list)
+    output = [0] * n
 
-#     exp = 1
-#     while max_val // exp > 0:
-#         buckets = [[] for _ in range(10)]
+    exp = 1
+    while max_val // exp > 0:
+        buckets = [[] for _ in range(10)]
         
-#         for num in list:
-#             digit = (num // exp) % 10
-#             buckets[digit] = manual_append(buckets[digit], num)
+        for num in list:
+            digit = (num // exp) % 10
+            buckets[digit] = manual_append(buckets[digit], num)
         
-#         index = 0
-#         for bucket in buckets:
-#             for num in bucket:
-#                 output[index] = num
-#                 index += 1
+        index = 0
+        for bucket in buckets:
+            for num in bucket:
+                output[index] = num
+                index += 1
 
-#         for i in range(n):
-#             list[i] = output[i]
+        for i in range(n):
+            list[i] = output[i]
         
-#         exp *= 10
+        exp *= 10
     
-#     return list
+    return list
 
 
 
 
 
 
-def counting_sort(arr, exp):
-    n = manual_len(arr)
+def counting_sort(list, exp):
+    n = manual_len(list)
     output = [0] * n
     count = [0] * 10
 
     # Count occurrences of digits
     for i in range(n):
-        index = arr[i] // exp
+        index = list[i] // exp
         count[index % 10] += 1
 
     # Cumulative count
@@ -83,30 +83,30 @@ def counting_sort(arr, exp):
     # Build output array
     i = n - 1
     while i >= 0:
-        index = arr[i] // exp
-        output[count[index % 10] - 1] = arr[i]
+        index = list[i] // exp
+        output[count[index % 10] - 1] = list[i]
         count[index % 10] -= 1
         i -= 1
 
     # Copy output to original array
     for i in range(n):
-        arr[i] = output[i]
+        list[i] = output[i]
 
-def radix_sort(arr):
+def radix_sort_counting(list:list[int]):
     # Handle empty or single-element arrays
-    if not arr:
-        return arr
+    if not list:
+        return list
     
     # Find the maximum number to know number of digits
-    max_num = manual_max(arr)
+    max_num = manual_max(list)
     
     # Do counting sort for every digit
     exp = 1
     while max_num // exp > 0:
-        counting_sort(arr, exp)
+        counting_sort(list, exp)
         exp *= 10
     
-    return arr
+    return list
 
 
 
@@ -137,9 +137,10 @@ def radix_sort(arr):
     
 #     return list
 
+
 # # Exemplo de uso
 # if __name__ == "__main__":
-#     arr = [170, 45, 75, 90, 802, 24, 2, 66]
-#     print("Array original:", arr)
-#     arr = radix_sort(arr)
-#     print("Array ordenado:", arr)
+#     list = [170, 45, 75, 90, 802, 24, 2, 66]
+#     print("Array original:", list)
+#     list = radix_sort(list)
+#     print("Array ordenado:", list)
