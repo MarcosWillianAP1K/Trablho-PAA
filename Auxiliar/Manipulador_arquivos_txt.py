@@ -56,6 +56,50 @@ def gerar_numeros_e_salvar(quantidade:int):
     
     print("\nOperação concluída!")
 
+#funçao especifica para gerar 10mil numeros com 5 digitos para o radix sort
+def gerar_10mil_numeros_com_5_digitos_e_salvar():
+    
+    
+    
+     # --- Gerar e salvar números crescentes ---
+    nome_arquivo_crescente = f'Arquivos_testes/crescentes_radix.txt'
+    if os.path.exists(nome_arquivo_crescente):
+        print(f"Arquivo '{nome_arquivo_crescente}' já existe. Pulando geração.")
+    else:
+        
+        with open(nome_arquivo_crescente, 'w') as arquivo:
+            for i in range(10000, 100000):
+                arquivo.write(f"{i}\n")
+
+    # --- Gerar e salvar números decrescentes ---
+    nome_arquivo_decrescente = f'Arquivos_testes/decrescentes_radix.txt'
+    if os.path.exists(nome_arquivo_decrescente):
+        print(f"Arquivo '{nome_arquivo_decrescente}' já existe. Pulando geração.")
+    else:
+        
+        with open(nome_arquivo_decrescente, 'w') as arquivo:
+            for i in range(10000, 100000):
+                arquivo.write(f"{i}\n")
+
+    # --- Gerar e salvar números aleatórios (embaralhados) ---
+    nome_arquivo_aleatorio = f'Arquivos_testes/aleatorios_radix.txt'
+    if os.path.exists(nome_arquivo_aleatorio):
+        print(f"Arquivo '{nome_arquivo_aleatorio}' já existe. Pulando geração.")
+    else:
+
+        # 1. Cria uma lista com todos os números de 1 até a quantidade
+        numeros = list(range(10000, 100000))
+
+        # 2. Embaralha a lista de forma aleatória
+        random.shuffle(numeros)
+        
+        # 3. Salva a lista embaralhada no arquivo
+        with open(nome_arquivo_aleatorio, 'w') as arquivo:
+            for numero in numeros:
+                arquivo.write(f"{numero}\n")
+    
+    print("\nOperação concluída!")
+    
 
 def ler_numeros_do_arquivo(nome_arquivo:str):
     """
