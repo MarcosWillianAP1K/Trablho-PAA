@@ -32,34 +32,85 @@ def manual_extend(lst1, lst2):
         new_lst[manual_len(lst1) + i] = lst2[i]
     return new_lst
 
-def radix_sort(list:list[int]):
-    if not list:
-        return list
+# def radix_sort(list:list[int]):
+#     if not list:
+#         return list
 
-    max_val = manual_max(list)
-    n = manual_len(list)
+#     max_val = manual_max(list)
+#     n = manual_len(list)
+#     output = [0] * n
+
+#     exp = 1
+#     while max_val // exp > 0:
+#         buckets = [[] for _ in range(10)]
+        
+#         for num in list:
+#             digit = (num // exp) % 10
+#             buckets[digit] = manual_append(buckets[digit], num)
+        
+#         index = 0
+#         for bucket in buckets:
+#             for num in bucket:
+#                 output[index] = num
+#                 index += 1
+
+#         for i in range(n):
+#             list[i] = output[i]
+        
+#         exp *= 10
+    
+#     return list
+
+
+
+
+
+
+def counting_sort(arr, exp):
+    n = manual_len(arr)
     output = [0] * n
+    count = [0] * 10
 
+    # Count occurrences of digits
+    for i in range(n):
+        index = arr[i] // exp
+        count[index % 10] += 1
+
+    # Cumulative count
+    for i in range(1, 10):
+        count[i] += count[i - 1]
+
+    # Build output array
+    i = n - 1
+    while i >= 0:
+        index = arr[i] // exp
+        output[count[index % 10] - 1] = arr[i]
+        count[index % 10] -= 1
+        i -= 1
+
+    # Copy output to original array
+    for i in range(n):
+        arr[i] = output[i]
+
+def radix_sort(arr):
+    # Handle empty or single-element arrays
+    if not arr:
+        return arr
+    
+    # Find the maximum number to know number of digits
+    max_num = manual_max(arr)
+    
+    # Do counting sort for every digit
     exp = 1
-    while max_val // exp > 0:
-        buckets = [[] for _ in range(10)]
-        
-        for num in list:
-            digit = (num // exp) % 10
-            buckets[digit] = manual_append(buckets[digit], num)
-        
-        index = 0
-        for bucket in buckets:
-            for num in bucket:
-                output[index] = num
-                index += 1
-
-        for i in range(n):
-            list[i] = output[i]
-        
+    while max_num // exp > 0:
+        counting_sort(arr, exp)
         exp *= 10
     
-    return list
+    return arr
+
+
+
+
 
 
 

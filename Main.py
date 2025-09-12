@@ -5,7 +5,7 @@ from Algoritmos import Radix
 from Auxiliar import gerador_graficos
 
 #Defina na lista cada indice indicando a quantidade de numero do arquivo de teste, e a quantidade de indices indica quantos testes serao feitos
-lista_quantidade_de_testes = ["100", "500", "1000"]
+lista_quantidade_de_testes = ["100", "500", "1000", "10000", "30000", "50000"]
 
 def gerar_arquivos_de_teste():
     for i in lista_quantidade_de_testes:
@@ -176,9 +176,9 @@ def gerar_tabelas():
     # print("\n---------------------------------\n")
     # # Manipulador_arquivos_txt.limpar_arquivo(f'Resultados/Resultados_coktail.txt')
     # executar_testes_coktail()
-    # print("\n---------------------------------\n")
-    #Manipulador_arquivos_txt.limpar_arquivo(f'Resultados/Resultados_radix.txt')
-    # executar_testes_radix()
+    print("\n---------------------------------\n")
+    Manipulador_arquivos_txt.limpar_arquivo(f'Resultados/Resultados_radix.txt')
+    executar_testes_radix()
     
     
     # Perguntar ao usuário se deseja gerar os gráficos

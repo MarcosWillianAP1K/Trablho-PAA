@@ -1,2 +1,0 @@
-Nota: Os tempos apresentados sao a media dos tempos de 10 execucoes para cada lista.
-
