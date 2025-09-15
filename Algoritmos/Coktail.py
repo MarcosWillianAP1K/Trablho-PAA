@@ -1,5 +1,12 @@
+def manual_len(lst):
+    count = 0
+    for _ in lst:
+        count += 1
+    return count
+
+
 def cocktail_sort(lista:list[int]):
-    tamanho = len(lista)
+    tamanho = manual_len(lista)
     houve_troca = True
     inicio = 0
     fim = tamanho - 1
