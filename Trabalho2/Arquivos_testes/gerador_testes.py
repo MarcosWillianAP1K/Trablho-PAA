@@ -1,22 +1,8 @@
-import sys
-from pathlib import Path
-
-# Adiciona temporariamente o pai ao path para importar setup_path
-sys.path.insert(0, str(Path(__file__).parent.parent))
-
-import setup_path #configura o path automaticamente
-path = str(setup_path.configurar_path(""))
-
 import Auxiliar.Manipulador_arquivos_txt as txt
 
 class Gerador_testes:
     
-    def __init__(self, ):
-        
-        if "Trabalho2" in path:
-            diretorio_base = f"{path}/Arquivos_testes"
-        else:
-            diretorio_base = f"{path}/Trabalho2/Arquivos_testes"
+    def __init__(self, diretorio_base:str = ""):
 
         self.diretorio_base = diretorio_base
     
@@ -93,7 +79,7 @@ class Gerador_testes:
             """
             Gera um arquivo de teste com duas strings iguais de tamanho 'tamanho'.
             """
-            nome_arquivo = f"{self.diretorio_base}/strings_iguais_{tamanho_inicial}_a_{tamanho_final}.txt"
+            nome_arquivo = f"{self.diretorio_base}/tam_dif_strings_iguais_{tamanho_inicial}_a_{tamanho_final}.txt"
             arquivo = txt.Arquivo_txt(nome_arquivo)
             
             for tamanho in range(tamanho_inicial, tamanho_final + 1):
@@ -106,7 +92,7 @@ class Gerador_testes:
             Gera um arquivo de teste com duas strings diferentes de tamanho 'tamanho'.
             """
 
-            nome_arquivo = f"{self.diretorio_base}/strings_diferentes_{tamanho_inicial}_a_{tamanho_final}.txt"
+            nome_arquivo = f"{self.diretorio_base}/tam_dif_strings_diferentes_{tamanho_inicial}_a_{tamanho_final}.txt"
             arquivo = txt.Arquivo_txt(nome_arquivo)
             #Caso base
             s1 = 'a' * tamanho_inicial
@@ -126,7 +112,7 @@ class Gerador_testes:
             Gera um arquivo de teste com duas strings que diferem em 'diferenca' caracteres.
             """
             
-            nome_arquivo = f"{self.diretorio_base}/strings_parciais_{tamanho_inicial}_a_{tamanho_final}.txt"
+            nome_arquivo = f"{self.diretorio_base}/tam_dif_strings_parciais_{tamanho_inicial}_a_{tamanho_final}.txt"
             arquivo = txt.Arquivo_txt(nome_arquivo)
             #Caso base
             s1 = 'a' * tamanho_inicial
@@ -148,7 +134,7 @@ class Gerador_testes:
             import random
             import string
             
-            nome_arquivo = f"{self.diretorio_base}/strings_aleatorias_{tamanho_inicial}_a_{tamanho_final}.txt"
+            nome_arquivo = f"{self.diretorio_base}/tam_dif_strings_aleatorias_{tamanho_inicial}_a_{tamanho_final}.txt"
             arquivo = txt.Arquivo_txt(nome_arquivo)
 
             #Caso base
@@ -167,3 +153,19 @@ class Gerador_testes:
         gerar_testes_strings_diferentes(self, tamanho1_inicial, tamanho1_final)
         gerar_testes_strings_parciais(self, tamanho1_inicial, tamanho1_final)
         gerar_testes_strings_aleatorias(self, tamanho1_inicial, tamanho1_final)
+
+    def deletar_all_testes(self):
+        import os
+        for arquivo in os.listdir(self.diretorio_base):
+            if arquivo.startswith("tam_"):
+                caminho_arquivo = os.path.join(self.diretorio_base, arquivo)
+                arquivo_txt = txt.Arquivo_txt(caminho_arquivo)
+                arquivo_txt.apagar_arquivo()
+                
+    def verificar_testes_existentes(self):
+        import os
+        arquivos_existentes = []
+        for arquivo in os.listdir(self.diretorio_base):
+            if arquivo.startswith("tam_"):
+                arquivos_existentes.append(arquivo)
+        return arquivos_existentes

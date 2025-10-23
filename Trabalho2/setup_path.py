@@ -13,16 +13,13 @@ def encontrar_raiz_projeto(nome_pasta:str) -> Path:
 
 def configurar_path(nome_pasta:str= ""):
     
-    if nome_pasta == "":
-        return None
-    
     """Configura o sys.path para permitir imports do projeto"""
     diretorio_projeto = encontrar_raiz_projeto(nome_pasta)
     if str(diretorio_projeto) not in sys.path:
         sys.path.insert(0, str(diretorio_projeto))
     
-        return diretorio_projeto
-    return None
+    return str(diretorio_projeto)
+    
     
 
 
