@@ -14,7 +14,7 @@ class Gerador_testes:
             """
             Gera um arquivo de teste com duas strings iguais de tamanho 'tamanho'.
             """
-            nome_arquivo = f"{self.diretorio_base}/tam_igual_strings_iguais_{self.tamanho_inicial}_a_{self.tamanho_final}.txt"
+            nome_arquivo = f"{self.diretorio_base}tam_igual_strings_iguais_{self.tamanho_inicial}_a_{self.tamanho_final}.txt"
             arquivo = txt.Arquivo_txt(nome_arquivo)
             
             arquivo.limpar_arquivo()
@@ -28,7 +28,7 @@ class Gerador_testes:
             """
             Gera um arquivo de teste com duas strings diferentes de tamanho 'tamanho'.
             """
-            nome_arquivo = f"{self.diretorio_base}/tam_igual_strings_diferentes_{self.tamanho_inicial}_a_{self.tamanho_final}.txt"
+            nome_arquivo = f"{self.diretorio_base}tam_igual_strings_diferentes_{self.tamanho_inicial}_a_{self.tamanho_final}.txt"
             arquivo = txt.Arquivo_txt(nome_arquivo)
             arquivo.limpar_arquivo()
 
@@ -44,7 +44,7 @@ class Gerador_testes:
             """
             Gera um arquivo de teste com duas strings que diferem em 'diferenca' caracteres.
             """
-            nome_arquivo = f"{self.diretorio_base}/tam_igual_strings_parciais_{self.tamanho_inicial}_a_{self.tamanho_final}.txt"
+            nome_arquivo = f"{self.diretorio_base}tam_igual_strings_parciais_{self.tamanho_inicial}_a_{self.tamanho_final}.txt"
             arquivo = txt.Arquivo_txt(nome_arquivo)
             arquivo.limpar_arquivo()
 

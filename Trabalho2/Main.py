@@ -15,7 +15,7 @@ import Trabalho2.Auxiliar.gerador_testes_resultados as gerador
 
 def gerar_testes():
     
-    gerar = gerador.Gerador_testes(f"{DIRETORIO_BASE}/Arquivos_testes", TAMANHO_INICIAL, TAMANHO_FINAL)
+    gerar = gerador.Gerador_testes(f"{DIRETORIO_BASE}/Arquivos_testes/", TAMANHO_INICIAL, TAMANHO_FINAL)
     
     # print(gerar.diretorio_base)
     
@@ -26,7 +26,7 @@ def gerar_testes():
     
     lista = [10.0, 10.0, 10.0, 10.0, 10.0]
     
-    resultados = gerador.gerador_resultados(f"{DIRETORIO_BASE}/Arquivos_testes", TAMANHO_INICIAL, TAMANHO_FINAL)
+    resultados = gerador.gerador_resultados(f"{DIRETORIO_BASE}/Resultados/", TAMANHO_INICIAL, TAMANHO_FINAL)
     
     resultados.escrever_resultado_tam_iguais(lista, lista, lista, lista)
     resultados.escrever_resultado_tam_diferentes(lista, lista, lista, lista)
