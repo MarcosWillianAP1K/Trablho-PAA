@@ -33,15 +33,24 @@ def distancia_edicao_recursiva(s1:str, s2:str) -> int:
 
 
 
-def distancia_edicao_dp(s1:str, s2:str) -> int:
+def distancia_edicao_prog_dinamica(s1:str, s2:str) -> int:
     """
     Calcula a Distância de Edição entre s1 e s2 usando Programação Dinâmica.
     """
-    m, n = len(s1), len(s2)
+    m, n = len(s1), len(s2) # Tamanhos das strings
 
-    # Cria uma matriz (m+1)x(n+1) para armazenar os resultados.
-    # A linha/coluna extra é para lidar com strings vazias.
+    # Cria uma matriz para armazenar os resultados intermediários
+    # Dimensão: (m+1) linhas x (n+1) colunas
+    # A linha 0 e coluna 0 representam strings vazias
+    
     dp = [[0] * (n + 1) for _ in range(m + 1)]
+    
+    # dp = []
+    # for i in range(m + 1):
+    #     linha = []
+    #     for j in range(n + 1):
+    #         linha.append(0)
+    #     dp.append(linha)
 
     # Preenche a primeira linha e a primeira coluna da matriz.
     # Custo de transformar uma string vazia em outra.
@@ -70,33 +79,3 @@ def distancia_edicao_dp(s1:str, s2:str) -> int:
     return dp[m][n]
 
 
-if __name__ == "__main__":
-    # --- Exemplo 1: Simples ---
-    palavra1 = "BOLO"
-    palavra2 = "BOLA"
-    
-    print(f"--- Comparando '{palavra1}' e '{palavra2}' ---")
-    dist_dp = distancia_edicao_dp(palavra1, palavra2)
-    dist_recursivo = distancia_edicao_recursiva(palavra1, palavra2)
-    print(f"Distância (Programação Dinâmica): {dist_dp}")
-    print(f"Distância (Recursiva): {dist_recursivo}")
-    # A versão recursiva seria rápida aqui, pois as strings são pequenas
-    # dist_rec = distancia_edicao_recursiva(palavra1, palavra2) 
-    # print(f"Distância (Recursiva): {dist_rec}")
-    print("-" * 30)
-
-    # --- Exemplo 2: Mais complexo ---
-    palavra3 = "SÁBADO"
-    palavra4 = "DOMINGO"
-
-    print(f"--- Comparando '{palavra3}' e '{palavra4}' ---")
-    dist_dp_2 = distancia_edicao_dp(palavra3, palavra4)
-    dist_rec_2 = distancia_edicao_recursiva(palavra3, palavra4)
-    print(f"Distância (Programação Dinâmica): {dist_dp_2}")
-    print(f"Distância (Recursiva): {dist_rec_2}")
-    
-    # AVISO: A versão recursiva para este exemplo já será BEM LENTA.
-    # Descomente a linha abaixo por sua conta e risco para ver a diferença!
-    # dist_rec_2 = distancia_edicao_recursiva(palavra3, palavra4)
-    # print(f"Distância (Recursiva): {dist_rec_2}")
-    print("-" * 30)
