@@ -180,8 +180,8 @@ class gerador_resultados:
         self.tamanho_inicial = tamanho_inicial
         self.tamanho_final = tamanho_final
 
-    def escrever_resultado_tam_iguais(self,tempo_iguais:list[float], memoria_iguais:float, tempo_diferentes:list[float], memoria_diferentes:float, /
-                                      tempo_parciais:list[float], memoria_parciais:float, tempo_aleatorias:list[float], memoria_aleatorias:float):
+    def escrever_resultado_tam_iguais(self, tempo_iguais:list[float], memoria_iguais:list[float], tempo_diferentes:list[float], memoria_diferentes:list[float],
+                                      tempo_parciais:list[float], memoria_parciais:list[float], tempo_aleatorias:list[float], memoria_aleatorias:list[float]):
 
         if not tempo_iguais or not tempo_diferentes or not tempo_parciais or not tempo_aleatorias:
             return
@@ -195,29 +195,33 @@ class gerador_resultados:
         arquivo.escrever_no_arquivo("\n--------------------------------\n\n")
         
         tempo_medio = sum(tempo_iguais) / len(tempo_iguais)
+        memoria_media_gasta = sum(memoria_iguais) / len(memoria_iguais)
         
         arquivo.escrever_no_arquivo(f"Tempo medio strings iguais: {tempo_medio}\n")
-        arquivo.escrever_no_arquivo(f"Memoria gasta total strings iguais: {memoria_iguais}\n")
-        
+        arquivo.escrever_no_arquivo(f"Memoria media gasta strings iguais: {memoria_media_gasta}\n")
+
         tempo_medio = sum(tempo_diferentes) / len(tempo_diferentes)
-        
+        memoria_media_gasta = sum(memoria_diferentes) / len(memoria_diferentes)
+
         arquivo.escrever_no_arquivo(f"Tempo medio strings diferentes: {tempo_medio}\n")
-        arquivo.escrever_no_arquivo(f"Memoria gasta total strings diferentes: {memoria_diferentes}\n")
+        arquivo.escrever_no_arquivo(f"Memoria media gasta strings diferentes: {memoria_media_gasta}\n")
 
         tempo_medio = sum(tempo_parciais) / len(tempo_parciais)
-        
+        memoria_media_gasta = sum(memoria_parciais) / len(memoria_parciais)
+
         arquivo.escrever_no_arquivo(f"Tempo medio strings parciais: {tempo_medio}\n")
-        arquivo.escrever_no_arquivo(f"Memoria gasta total strings parciais: {memoria_parciais}\n")
-        
+        arquivo.escrever_no_arquivo(f"Memoria media gasta strings parciais: {memoria_media_gasta}\n")
+
         tempo_medio = sum(tempo_aleatorias) / len(tempo_aleatorias)
-        
+        memoria_media_gasta = sum(memoria_aleatorias) / len(memoria_aleatorias)
+
         arquivo.escrever_no_arquivo(f"Tempo medio strings aleatorias: {tempo_medio}\n")
-        arquivo.escrever_no_arquivo(f"Memoria gasta total strings aleatorias: {memoria_aleatorias}\n")
-        
+        arquivo.escrever_no_arquivo(f"Memoria media gasta strings aleatorias: {memoria_media_gasta}\n")
+
         arquivo.escrever_no_arquivo("\n--------------------------------")
 
-    def escrever_resultado_tam_diferentes(self,tempo_iguais:list[float], memoria_iguais:float, tempo_diferentes:list[float], memoria_diferentes:float, /
-                                          tempo_parciais:list[float], memoria_parciais:float, tempo_aleatorias:list[float], memoria_aleatorias:float):
+    def escrever_resultado_tam_diferentes(self, tempo_iguais:list[float], memoria_iguais:list[float], tempo_diferentes:list[float], memoria_diferentes:list[float],
+                                          tempo_parciais:list[float], memoria_parciais:list[float], tempo_aleatorias:list[float], memoria_aleatorias:list[float]):
 
         if not tempo_iguais or not tempo_diferentes or not tempo_parciais or not tempo_aleatorias:
             return
@@ -231,25 +235,29 @@ class gerador_resultados:
         arquivo.escrever_no_arquivo("\n--------------------------------\n\n")
         
         tempo_medio = sum(tempo_iguais) / len(tempo_iguais)
-        
+        memoria_media_gasta = sum(memoria_iguais) / len(memoria_iguais)
+
         arquivo.escrever_no_arquivo(f"Tempo medio strings iguais: {tempo_medio}\n")
-        arquivo.escrever_no_arquivo(f"Memoria gasta total strings iguais: {memoria_iguais}\n")
-        
+        arquivo.escrever_no_arquivo(f"Memoria media gasta strings iguais: {memoria_media_gasta}\n")
+
         tempo_medio = sum(tempo_diferentes) / len(tempo_diferentes)
-        
+        memoria_media_gasta = sum(memoria_diferentes) / len(memoria_diferentes)
+
         arquivo.escrever_no_arquivo(f"Tempo medio strings diferentes: {tempo_medio}\n")
-        arquivo.escrever_no_arquivo(f"Memoria gasta total strings diferentes: {memoria_diferentes}\n")
-        
+        arquivo.escrever_no_arquivo(f"Memoria media gasta strings diferentes: {memoria_media_gasta}\n")
+
         tempo_medio = sum(tempo_parciais) / len(tempo_parciais)
-        
+        memoria_media_gasta = sum(memoria_parciais) / len(memoria_parciais)
+
         arquivo.escrever_no_arquivo(f"Tempo medio strings parciais: {tempo_medio}\n")
-        arquivo.escrever_no_arquivo(f"Memoria gasta total strings parciais: {memoria_parciais}\n")
-        
+        arquivo.escrever_no_arquivo(f"Memoria media gasta strings parciais: {memoria_media_gasta}\n")
+
         tempo_medio = sum(tempo_aleatorias) / len(tempo_aleatorias)
-        
+        memoria_media_gasta = sum(memoria_aleatorias) / len(memoria_aleatorias)
+
         arquivo.escrever_no_arquivo(f"Tempo medio strings aleatorias: {tempo_medio}\n")
-        arquivo.escrever_no_arquivo(f"Memoria gasta total strings aleatorias: {memoria_aleatorias}\n")
-        
+        arquivo.escrever_no_arquivo(f"Memoria media gasta strings aleatorias: {memoria_media_gasta}\n")
+
         arquivo.escrever_no_arquivo("\n--------------------------------")
     
     

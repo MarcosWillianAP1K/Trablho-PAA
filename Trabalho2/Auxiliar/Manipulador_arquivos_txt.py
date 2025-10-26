@@ -62,4 +62,3 @@ class Arquivo_txt:
                 pass
 
 
-
