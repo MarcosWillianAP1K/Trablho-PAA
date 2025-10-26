@@ -45,10 +45,10 @@ def executar_testes_prog_dinamica():
         cronometro_execucao.parar()
         medidor_memoria.parar_medicao()
         
-        tempo_execucao = cronometro_execucao.tempo_segundos()
-        memoria_usada_MB = medidor_memoria.obter_memoria_MB()
+        tempo_execucao = cronometro_execucao.tempo_milisegundos()
+        memoria_usada = medidor_memoria.obter_memoria_kB()
         
-        return tempo_execucao, memoria_usada_MB
+        return tempo_execucao, memoria_usada
     
     lista_tempos_iguais = []
     lista_tempos_diferentes = []

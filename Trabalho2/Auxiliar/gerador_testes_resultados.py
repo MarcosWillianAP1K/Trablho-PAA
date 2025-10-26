@@ -191,7 +191,7 @@ class gerador_resultados:
         arquivo.limpar_arquivo()
         
         arquivo.escrever_no_arquivo(f"Resultados para strings de tamanhos iguais de {self.tamanho_inicial} a {self.tamanho_final}\n")
-        arquivo.escrever_no_arquivo(f"Executado {len(tempo_iguais)} vezes para cada teste:\n\n")
+        arquivo.escrever_no_arquivo(f"Executado {len(tempo_iguais)} vezes para cada teste: (ms) (MB)\n\n")
         arquivo.escrever_no_arquivo("\n--------------------------------\n\n")
         
         tempo_medio = sum(tempo_iguais) / len(tempo_iguais)
@@ -231,7 +231,7 @@ class gerador_resultados:
         arquivo.limpar_arquivo()
 
         arquivo.escrever_no_arquivo(f"Resultados para strings de tamanhos diferentes de {self.tamanho_inicial} a {self.tamanho_final}\n")
-        arquivo.escrever_no_arquivo(f"Executado {len(tempo_iguais)} vezes para cada teste:\n\n")
+        arquivo.escrever_no_arquivo(f"Executado {len(tempo_iguais)} vezes para cada teste: (ms) (MB)\n\n")
         arquivo.escrever_no_arquivo("\n--------------------------------\n\n")
         
         tempo_medio = sum(tempo_iguais) / len(tempo_iguais)
