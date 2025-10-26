@@ -6,7 +6,7 @@ import gc
 
 class MedidorMemoria:
     def __init__(self):
-        self.memoria_atual = 0.0  # Inicializa com 0
+        self.memoria_atual = 0  # Inicializa com 0
 
     def iniciar_medicao(self):
         if tm.is_tracing():
@@ -17,7 +17,8 @@ class MedidorMemoria:
     def parar_medicao(self):
         if not tm.is_tracing():
             return  # Evita erro se não estiver medindo
-        self.memoria_atual, _ = tm.get_traced_memory()
+        _, pico = tm.get_traced_memory()  # Captura o pico de memória
+        self.memoria_atual = pico  # Usa o pico ao invés da memória atual
         tm.stop()
 
     def obter_memoria_MB(self) -> float:

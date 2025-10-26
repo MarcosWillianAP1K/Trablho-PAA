@@ -20,10 +20,7 @@ class Arquivo_txt:
             mode = 'a' if os.path.exists(self.diretorio_arquivo) else 'w'
             with open(self.diretorio_arquivo, mode) as arquivo:
                 arquivo.write(conteudo)
-            if mode == 'a':
-                print(f"Conteúdo adicionado ao arquivo existente '{self.diretorio_arquivo}'.")
-            else:
-                print(f"Novo arquivo '{self.diretorio_arquivo}' criado e conteúdo escrito com sucesso.")
+            
         except Exception as e:
             print(f"Erro ao escrever no arquivo '{self.diretorio_arquivo}': {e}")
 
@@ -38,7 +35,7 @@ class Arquivo_txt:
         try:
             if os.path.exists(self.diretorio_arquivo):
                 os.remove(self.diretorio_arquivo)
-                print(f"Arquivo '{self.diretorio_arquivo}' apagado com sucesso.")
+                
             else:
                 print(f"O arquivo '{self.diretorio_arquivo}' não existe.")
         except Exception as e:

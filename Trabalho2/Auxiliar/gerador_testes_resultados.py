@@ -3,7 +3,6 @@ import Auxiliar.Manipulador_arquivos_txt as txt
 class Gerador_testes:
     
     def __init__(self, diretorio_base:str = "",  tamanho_inicial:int = 0, tamanho_final:int = 0):
-
         self.diretorio_base = diretorio_base
         self.tamanho_inicial = tamanho_inicial
         self.tamanho_final = tamanho_final
@@ -11,12 +10,9 @@ class Gerador_testes:
     def gerar_testes_strings_tamanhos_iguais(self):
         
         def gerar_testes_strings_iguais(self):
-            """
-            Gera um arquivo de teste com duas strings iguais de tamanho 'tamanho'.
-            """
+            """Gera um arquivo de teste com duas strings iguais de tamanho 'tamanho'."""
             nome_arquivo = f"{self.diretorio_base}tam_igual_strings_iguais_{self.tamanho_inicial}_a_{self.tamanho_final}.txt"
-            arquivo = txt.Arquivo_txt(nome_arquivo)
-            
+            arquivo = txt.Arquivo_txt(nome_arquivo)  
             arquivo.limpar_arquivo()
 
             for tamanho in range(self.tamanho_inicial, self.tamanho_final + 1):
@@ -25,40 +21,31 @@ class Gerador_testes:
                 arquivo.escrever_no_arquivo(conteudo)
 
         def gerar_testes_strings_diferentes(self):
-            """
-            Gera um arquivo de teste com duas strings diferentes de tamanho 'tamanho'.
-            """
+            """Gera um arquivo de teste com duas strings diferentes de tamanho 'tamanho'."""
             nome_arquivo = f"{self.diretorio_base}tam_igual_strings_diferentes_{self.tamanho_inicial}_a_{self.tamanho_final}.txt"
             arquivo = txt.Arquivo_txt(nome_arquivo)
             arquivo.limpar_arquivo()
 
             for tamanho in range(self.tamanho_inicial, self.tamanho_final + 1):
-
-
                 s1 = 'a' * tamanho
                 s2 = 'b' * tamanho
                 conteudo = f"{s1}\n{s2}\n"
                 arquivo.escrever_no_arquivo(conteudo)
 
         def gerar_testes_strings_parciais(self):
-            """
-            Gera um arquivo de teste com duas strings que diferem em 'diferenca' caracteres.
-            """
+            """Gera um arquivo de teste com duas strings que diferem em metade dos caracteres."""
             nome_arquivo = f"{self.diretorio_base}tam_igual_strings_parciais_{self.tamanho_inicial}_a_{self.tamanho_final}.txt"
             arquivo = txt.Arquivo_txt(nome_arquivo)
             arquivo.limpar_arquivo()
 
             for tamanho in range(self.tamanho_inicial, self.tamanho_final + 1):
-
                 s1 = 'a' * tamanho
                 s2 = 'a' * (tamanho // 2) + ('b' * (tamanho // 2) if tamanho % 2 == 0 else 'b' * (tamanho // 2 + 1))
                 conteudo = f"{s1}\n{s2}\n"
                 arquivo.escrever_no_arquivo(conteudo)
             
         def gerar_testes_strings_aleatorias(self):
-            """
-            Gera um arquivo de teste com duas strings aleatórias de tamanho 'tamanho'.
-            """
+            """Gera um arquivo de teste com duas strings aleatórias de tamanho 'tamanho'."""
             import random
             import string
 
@@ -67,8 +54,6 @@ class Gerador_testes:
             arquivo.limpar_arquivo()
 
             for tamanho in range(self.tamanho_inicial, self.tamanho_final + 1):
-                
-
                 s1 = ''.join(random.choices(string.ascii_lowercase, k=tamanho))
                 s2 = ''.join(random.choices(string.ascii_lowercase, k=tamanho))
                 conteudo = f"{s1}\n{s2}\n"
@@ -82,64 +67,52 @@ class Gerador_testes:
     def gerar_testes_strings_tamanhos_diferentes(self):
 
         def gerar_testes_strings_iguais(self):
-            """
-            Gera um arquivo de teste com duas strings iguais de tamanho 'tamanho'.
-            """
+            """Gera um arquivo de teste com strings iguais de tamanhos crescentes."""
             nome_arquivo = f"{self.diretorio_base}/tam_dif_strings_iguais_{self.tamanho_inicial}_a_{self.tamanho_final}.txt"
             arquivo = txt.Arquivo_txt(nome_arquivo)
             arquivo.limpar_arquivo()
 
+            s1 = 'a' * self.tamanho_inicial
+            conteudo = f"{s1}\n"
+            arquivo.escrever_no_arquivo(conteudo)
+            
             for tamanho in range(self.tamanho_inicial + 1, self.tamanho_final + 1):
                 s = 'a' * tamanho
                 conteudo = f"{s}\n"
                 arquivo.escrever_no_arquivo(conteudo)
 
         def gerar_testes_strings_diferentes(self):
-            """
-            Gera um arquivo de teste com duas strings diferentes de tamanho 'tamanho'.
-            """
-
+            """Gera um arquivo de teste com strings diferentes de tamanhos crescentes."""
             nome_arquivo = f"{self.diretorio_base}/tam_dif_strings_diferentes_{self.tamanho_inicial}_a_{self.tamanho_final}.txt"
             arquivo = txt.Arquivo_txt(nome_arquivo)
             arquivo.limpar_arquivo()
-            #Caso base
+            
             s1 = 'a' * self.tamanho_inicial
             conteudo = f"{s1}\n"
             arquivo.escrever_no_arquivo(conteudo)
             
-            #proximas strings a serem comparadas
             for tamanho in range(self.tamanho_inicial + 1, self.tamanho_final + 1):
-                
-
                 s2 = 'b' * tamanho
                 conteudo = f"{s2}\n"
                 arquivo.escrever_no_arquivo(conteudo)
             
         def gerar_testes_strings_parciais(self):
-            """
-            Gera um arquivo de teste com duas strings que diferem em 'diferenca' caracteres.
-            """
-
+            """Gera um arquivo de teste com strings parcialmente diferentes de tamanhos crescentes."""
             nome_arquivo = f"{self.diretorio_base}/tam_dif_strings_parciais_{self.tamanho_inicial}_a_{self.tamanho_final}.txt"
             arquivo = txt.Arquivo_txt(nome_arquivo)
             arquivo.limpar_arquivo()
-            #Caso base
+            
             s1 = 'a' * self.tamanho_inicial
             conteudo = f"{s1}\n"
             arquivo.escrever_no_arquivo(conteudo)
 
             for tamanho in range(self.tamanho_inicial + 1, self.tamanho_final + 1):
-
-
-
                 s2 = 'a' * (tamanho // 2) + ('b' * (tamanho // 2) if tamanho % 2 == 0 else 'b' * (tamanho // 2 + 1))
                 conteudo = f"{s2}\n"
                 arquivo.escrever_no_arquivo(conteudo)
 
         def gerar_testes_strings_aleatorias(self):
-            """
-            Gera um arquivo de teste com duas strings aleatórias de tamanho 'tamanho'.
-            """
+            """Gera um arquivo de teste com strings aleatórias de tamanhos crescentes."""
             import random
             import string
 
@@ -147,14 +120,11 @@ class Gerador_testes:
             arquivo = txt.Arquivo_txt(nome_arquivo)
             arquivo.limpar_arquivo()
 
-            #Caso base
             s1 = ''.join(random.choices(string.ascii_lowercase, k=self.tamanho_inicial))
             conteudo = f"{s1}\n"
             arquivo.escrever_no_arquivo(conteudo)
 
             for tamanho in range(self.tamanho_inicial + 1, self.tamanho_final + 1):
-
-
                 s2 = ''.join(random.choices(string.ascii_lowercase, k=tamanho))
                 conteudo = f"{s2}\n"
                 arquivo.escrever_no_arquivo(conteudo)
@@ -191,7 +161,7 @@ class gerador_resultados:
         arquivo.limpar_arquivo()
         
         arquivo.escrever_no_arquivo(f"Resultados para strings de tamanhos iguais de {self.tamanho_inicial} a {self.tamanho_final}\n")
-        arquivo.escrever_no_arquivo(f"Executado {len(tempo_iguais)} vezes para cada teste: (ms) (MB)\n\n")
+        arquivo.escrever_no_arquivo(f"Executado {len(tempo_iguais)} vezes para cada teste: (Segundos e MB)\n\n")
         arquivo.escrever_no_arquivo("\n--------------------------------\n\n")
         
         tempo_medio = sum(tempo_iguais) / len(tempo_iguais)
@@ -231,7 +201,7 @@ class gerador_resultados:
         arquivo.limpar_arquivo()
 
         arquivo.escrever_no_arquivo(f"Resultados para strings de tamanhos diferentes de {self.tamanho_inicial} a {self.tamanho_final}\n")
-        arquivo.escrever_no_arquivo(f"Executado {len(tempo_iguais)} vezes para cada teste: (ms) (MB)\n\n")
+        arquivo.escrever_no_arquivo(f"Executado {len(tempo_iguais)} vezes para cada teste: (Segundos e MB)\n\n")
         arquivo.escrever_no_arquivo("\n--------------------------------\n\n")
         
         tempo_medio = sum(tempo_iguais) / len(tempo_iguais)
@@ -260,8 +230,6 @@ class gerador_resultados:
 
         arquivo.escrever_no_arquivo("\n--------------------------------")
     
-    
-                                                                              
     def deletar_all_resultados(self):
         import os
         for arquivo in os.listdir(self.diretorio_base):
@@ -269,4 +237,3 @@ class gerador_resultados:
                 caminho_arquivo = os.path.join(self.diretorio_base, arquivo)
                 arquivo_txt = txt.Arquivo_txt(caminho_arquivo)
                 arquivo_txt.apagar_arquivo()
-    
