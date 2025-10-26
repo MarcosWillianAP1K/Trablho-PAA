@@ -10,8 +10,9 @@ TAMANHO_INICIAL = 10
 TAMANHO_FINAL = 100
     
 import Trabalho2.Auxiliar.gerador_testes_resultados as gerador
-
-
+import Trabalho2.Auxiliar.Cronometro as cronometro
+import Trabalho2.Auxiliar.Medidor_memoria as medidor
+import Trabalho2.Auxiliar.gerador_graficos as graficos
 
 def gerar_testes():
     
@@ -21,15 +22,6 @@ def gerar_testes():
     
     gerar.gerar_testes_strings_tamanhos_iguais()
     gerar.gerar_testes_strings_tamanhos_diferentes()
-    
-    #teste dos resultados
-    
-    lista = [10.0, 10.0, 10.0, 10.0, 10.0]
-    
-    resultados = gerador.gerador_resultados(f"{DIRETORIO_BASE}/Resultados/", TAMANHO_INICIAL, TAMANHO_FINAL)
-    
-    resultados.escrever_resultado_tam_iguais(lista, lista, lista, lista)
-    resultados.escrever_resultado_tam_diferentes(lista, lista, lista, lista)
     
 
 
