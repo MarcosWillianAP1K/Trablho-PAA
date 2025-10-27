@@ -6,8 +6,8 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 
 import setup_path #configura o path automaticamente
 DIRETORIO_BASE = setup_path.configurar_path("Trabalho2")
-TAMANHO_INICIAL = 10
-TAMANHO_FINAL = 100
+TAMANHO_INICIAL = 2
+TAMANHO_FINAL = 10
 NUMERO_DE_VEZES_EXECUTAR = 1
     
 import Trabalho2.Auxiliar.gerador_testes_resultados as gerador
