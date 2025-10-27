@@ -4,24 +4,13 @@ Executado 9 vezes para cada teste: (Segundos e MB)
 
 --------------------------------
 
-<<<<<<< HEAD
-Tempo medio strings iguais: 0.00020655622231263097
+Tempo medio strings iguais: 0.00017956044444468312
 Memoria media gasta strings iguais: 0.001185946994357639
-Tempo medio strings diferentes: 0.00019051800002974537
+Tempo medio strings diferentes: 0.00011199888881997645
 Memoria media gasta strings diferentes: 0.001185946994357639
-Tempo medio strings parciais: 0.0001400981111853778
+Tempo medio strings parciais: 0.00022414522188935534
 Memoria media gasta strings parciais: 0.001185946994357639
-Tempo medio strings aleatorias: 0.0001317032222484866
+Tempo medio strings aleatorias: 8.725755540379194e-05
 Memoria media gasta strings aleatorias: 0.001185946994357639
-=======
-Tempo medio strings iguais: 0.0005470888889047072
-Memoria media gasta strings iguais: 0.001170688205295139
-Tempo medio strings diferentes: 0.00021283333323178036
-Memoria media gasta strings diferentes: 0.001170688205295139
-Tempo medio strings parciais: 0.000349777777753641
-Memoria media gasta strings parciais: 0.001170688205295139
-Tempo medio strings aleatorias: 0.0002519666667366336
-Memoria media gasta strings aleatorias: 0.001170688205295139
->>>>>>> 3c5b062fccfbd6e3c6a87221f9b36564d9537521
 
 --------------------------------
