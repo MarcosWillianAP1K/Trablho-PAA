@@ -15,7 +15,7 @@ NUMERO_DE_VEZES_EXECUTAR = 1
 import Trabalho3.Auxiliar.gerador_testes_resultados as gerador
 import Trabalho3.Auxiliar.Cronometro as cronometro
 import Trabalho3.Auxiliar.Medidor_memoria as medidor
-# import Trabalho3.Auxiliar.gerador_graficos as graficos
+import Trabalho3.Auxiliar.gerador_graficos as graficos
 import Trabalho3.Algortimo.Distancia_de_edicao as algos
 
 def gerar_testes():
@@ -294,6 +294,10 @@ if __name__ == "__main__":
     executar_testes_guloso()
     executar_testes_backtracking()
     executar_testes_backtracking_poda()
+    
+    # Gerar gráficos
+    graficos.gerar_todos_graficos(DIRETORIO_BASE, TAMANHO_INICIAL, TAMANHO_FINAL)
+    
     print("\n" + "="*50)
     print("Todos os testes foram concluídos com sucesso!")
     print("="*50)

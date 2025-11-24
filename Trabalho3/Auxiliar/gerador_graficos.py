@@ -3,466 +3,361 @@ import re
 import os
 import numpy as np
 
-def extrair_dados_arquivo(nome_arquivo: str):
-    """
-    Extrai os dados de tempo de execução e memória de um arquivo de resultados.
-    
-    Args:
-        nome_arquivo (str): Caminho para o arquivo de resultados
-        
-    Returns:
-        dict: Dicionário com os tempos e memórias para cada tipo de string
-    """
-    dados = {}
-    
-    try:
-        with open(nome_arquivo, 'r') as f:
-            conteudo = f.read()
-            
-        # Determinar se é teste de tamanhos iguais ou diferentes
-        tipo_teste = 'tam_iguais' if 'tam_iguais' in nome_arquivo else 'tam_diferentes'
-        
-        # Extrair o range de tamanhos do nome do arquivo
-        pattern_nome = r"(\d+)_a_(\d+)"
-        match_nome = re.search(pattern_nome, nome_arquivo)
-        if match_nome:
-            tamanho_inicial = int(match_nome.group(1))
-            tamanho_final = int(match_nome.group(2))
-        else:
-            return {}
-        
-        # Extrair os dados
-        pattern_tempo = r"Tempo medio strings (\w+): ([\d\.e\-\+]+)"
-        pattern_memoria = r"Memoria media gasta strings (\w+): ([\d\.e\-\+]+)"
-        
-        tempos_matches = re.finditer(pattern_tempo, conteudo)
-        memorias_matches = re.finditer(pattern_memoria, conteudo)
-        
-        # Armazenar os dados
-        for match in tempos_matches:
-            tipo = match.group(1)
-            tempo = float(match.group(2))
-            
-            if tipo not in dados:
-                dados[tipo] = {}
-            dados[tipo]['tempo'] = tempo
-            dados[tipo]['tamanho_inicial'] = tamanho_inicial
-            dados[tipo]['tamanho_final'] = tamanho_final
-            dados[tipo]['tipo_teste'] = tipo_teste
-        
-        for match in memorias_matches:
-            tipo = match.group(1)
-            memoria = float(match.group(2))
-            
-            if tipo not in dados:
-                dados[tipo] = {}
-            dados[tipo]['memoria'] = memoria
-    
-    except Exception as e:
-        print(f"Erro ao ler o arquivo {nome_arquivo}: {e}")
-        return {}
-        
-    return dados
 
-def formatar_valor(valor):
+def limpar_graficos_existentes(diretorio_base):
     """
-    Formata um valor numérico para exibição nos gráficos.
-    """
-    if valor < 0.00001:  # Notação científica para valores muito pequenos
-        return f"{valor:.2e}"
-    elif valor >= 1000:  # Para valores muito grandes
-        return f"{int(valor)}"
-    elif valor >= 100:
-        return f"{valor:.1f}"
-    elif valor >= 10:
-        return f"{valor:.2f}"
-    elif valor >= 0.1:
-        return f"{valor:.3f}"
-    else:
-        return f"{valor:.4f}"
-
-def listar_arquivos_resultados(diretorio_base: str, algoritmo: str):
-    """
-    Lista todos os arquivos de resultados para um algoritmo específico.
+    Remove todos os gráficos existentes antes de gerar novos.
     
     Args:
         diretorio_base: Diretório base do projeto
-        algoritmo: 'Prog_dinamica' ou 'Recursivo'
+    """
+    # Limpar pasta de gráficos comparativos
+    diretorio_graficos = f"{diretorio_base}/Graficos"
+    if os.path.exists(diretorio_graficos):
+        for arquivo in os.listdir(diretorio_graficos):
+            caminho_arquivo = os.path.join(diretorio_graficos, arquivo)
+            if os.path.isfile(caminho_arquivo) and arquivo.endswith('.png'):
+                os.remove(caminho_arquivo)
+        print("  ✓ Gráficos comparativos anteriores removidos")
+    
+    # Limpar pastas de gráficos individuais
+    algoritmos = ['Guloso', 'Backtracking', 'Backtracking_poda']
+    
+    for algo in algoritmos:
+        diretorio_graficos_algo = f"{diretorio_graficos}/{algo}"
+        if os.path.exists(diretorio_graficos_algo):
+            for arquivo in os.listdir(diretorio_graficos_algo):
+                if arquivo.endswith('.png'):
+                    os.remove(os.path.join(diretorio_graficos_algo, arquivo))
+            print(f"  ✓ Gráficos anteriores de {algo} removidos")
+
+
+def ler_resultados_de_arquivo(caminho_arquivo):
+    """
+    Lê os dados de tempo e memória de um arquivo de resultados.
+    
+    Args:
+        caminho_arquivo: Caminho completo do arquivo .txt
     
     Returns:
-        dict: Dicionário organizado por tipo de teste e range de tamanhos
+        Tupla (tempo_medio, memoria_media)
     """
-    dir_resultados = os.path.join(diretorio_base, 'Resultados', algoritmo)
+    if not os.path.exists(caminho_arquivo):
+        return 0.0, 0.0
     
-    if not os.path.exists(dir_resultados):
-        return {}
+    tempo_medio = 0.0
+    memoria_media = 0.0
     
-    arquivos = {}
-    
-    for arquivo in os.listdir(dir_resultados):
-        if arquivo.endswith('.txt') and arquivo.startswith('Resultados_string_'):
-            caminho_completo = os.path.join(dir_resultados, arquivo)
-            
-            # Identificar tipo de teste
-            if 'tam_iguais' in arquivo:
-                tipo_teste = 'tam_iguais'
-            elif 'tam_diferentes' in arquivo:
-                tipo_teste = 'tam_diferentes'
-            else:
-                continue
-            
-            # Extrair range de tamanhos
-            pattern = r"(\d+)_a_(\d+)"
-            match = re.search(pattern, arquivo)
-            if match:
-                range_key = f"{match.group(1)}_a_{match.group(2)}"
-                
-                if tipo_teste not in arquivos:
-                    arquivos[tipo_teste] = {}
-                arquivos[tipo_teste][range_key] = caminho_completo
-    
-    return arquivos
-
-def gerar_grafico_comparativo_algoritmos(diretorio_base: str):
-    """
-    Gera gráficos comparando Programação Dinâmica com Recursivo.
-    """
-    print("Gerando gráficos comparativos entre algoritmos...")
-    
-    # Listar arquivos de ambos os algoritmos
-    arquivos_pd = listar_arquivos_resultados(diretorio_base, 'Prog_dinamica')
-    arquivos_rec = listar_arquivos_resultados(diretorio_base, 'Recursivo')
-    
-    # Comparar para cada tipo de teste e range
-    for tipo_teste in ['tam_iguais', 'tam_diferentes']:
-        if tipo_teste not in arquivos_pd or tipo_teste not in arquivos_rec:
-            continue
+    with open(caminho_arquivo, 'r', encoding='utf-8') as arquivo:
+        conteudo = arquivo.read()
         
-        # Encontrar ranges comuns
-        ranges_pd = set(arquivos_pd[tipo_teste].keys())
-        ranges_rec = set(arquivos_rec[tipo_teste].keys())
-        ranges_comuns = sorted(ranges_pd & ranges_rec)
+        # Busca pelos valores médios diretamente (formato mais confiável)
+        # Exemplo: "Tempo medio strings iguais: 3.0399999559449498e-05"
         
-        for range_key in ranges_comuns:
-            arquivo_pd = arquivos_pd[tipo_teste][range_key]
-            arquivo_rec = arquivos_rec[tipo_teste][range_key]
-            
-            dados_pd = extrair_dados_arquivo(arquivo_pd)
-            dados_rec = extrair_dados_arquivo(arquivo_rec)
-            
-            if not dados_pd or not dados_rec:
-                continue
-            
-            # Gráfico de tempo
-            _gerar_grafico_comparativo_tempo(dados_pd, dados_rec, tipo_teste, range_key, diretorio_base)
-            
-            # Gráfico de memória
-            _gerar_grafico_comparativo_memoria(dados_pd, dados_rec, tipo_teste, range_key, diretorio_base)
+        # Tenta extrair tempos médios
+        tempos_encontrados = re.findall(r'Tempo medio.*?:\s*([\d.e+-]+)', conteudo)
+        if tempos_encontrados:
+            valores_tempo = [float(v) for v in tempos_encontrados]
+            tempo_medio = np.mean(valores_tempo)
+        
+        # Tenta extrair memórias médias
+        memorias_encontradas = re.findall(r'Memoria media gasta.*?:\s*([\d.e+-]+)', conteudo)
+        if memorias_encontradas:
+            valores_memoria = [float(v) for v in memorias_encontradas]
+            memoria_media = np.mean(valores_memoria)
     
-    print("✓ Gráficos comparativos gerados!")
+    return tempo_medio, memoria_media
 
-def _gerar_grafico_comparativo_tempo(dados_pd, dados_rec, tipo_teste, range_key, diretorio_base):
-    """Gera gráficos comparativos de tempo entre PD e Recursivo (barras e linhas)."""
-    tipos_string = ['iguais', 'diferentes', 'parciais', 'aleatorias']
-    rotulos = ['Iguais', 'Diferentes', 'Parciais', 'Aleatórias']
+
+def criar_graficos_comparativos(diretorio_resultados, diretorio_graficos, tamanho_inicial, tamanho_final):
+    """
+    Cria gráficos comparativos entre os 3 algoritmos.
+    Cada gráfico mostra as 4 variantes, com 3 barras (uma para cada algoritmo).
+    """
+    os.makedirs(diretorio_graficos, exist_ok=True)
     
-    # Filtrar apenas tipos que existem em ambos
-    tipos_disponiveis = [t for t in tipos_string if t in dados_pd and t in dados_rec]
-    rotulos_disponiveis = [rotulos[tipos_string.index(t)] for t in tipos_disponiveis]
+    algoritmos = ['Guloso', 'Backtracking', 'Backtracking_poda']
+    variantes = ['iguais', 'diferentes', 'parciais', 'aleatorias']
+    tipos_tamanho = [
+        ('tam_igual', 'Strings de Tamanhos Iguais'),
+        ('tam_dif', 'Strings de Tamanhos Diferentes')
+    ]
     
-    if not tipos_disponiveis:
-        return
+    cores = {
+        'Guloso': '#2ecc71',
+        'Backtracking': '#e74c3c',
+        'Backtracking_poda': '#3498db'
+    }
     
-    tempos_pd = [dados_pd[t]['tempo'] for t in tipos_disponiveis]
-    tempos_rec = [dados_rec[t]['tempo'] for t in tipos_disponiveis]
+    for tipo_tam, titulo_tam in tipos_tamanho:
+        # Coleta dados para todas as variantes e algoritmos
+        dados_tempo = {var: [] for var in variantes}
+        dados_memoria = {var: [] for var in variantes}
+        
+        for variante in variantes:
+            for algo in algoritmos:
+                arquivo = f"{diretorio_resultados}/{algo}/{tipo_tam}_strings_{variante}_{tamanho_inicial}_a_{tamanho_final}.txt"
+                tempo_medio, memoria_media = ler_resultados_de_arquivo(arquivo)
+                dados_tempo[variante].append(tempo_medio)
+                dados_memoria[variante].append(memoria_media)
+        
+        # Gráfico de Tempo
+        criar_grafico_comparativo_barras(
+            dados_tempo,
+            variantes,
+            algoritmos,
+            cores,
+            'Variantes de Strings',
+            'Tempo Médio de Execução (s)',
+            f'Comparação de Tempo - {titulo_tam}',
+            f"{diretorio_graficos}/comparativo_tempo_{tipo_tam}.png",
+            tipo_metrica='tempo'
+        )
+        
+        # Gráfico de Memória
+        criar_grafico_comparativo_barras(
+            dados_memoria,
+            variantes,
+            algoritmos,
+            cores,
+            'Variantes de Strings',
+            'Memória Média Utilizada (MB)',
+            f'Comparação de Memória - {titulo_tam}',
+            f"{diretorio_graficos}/comparativo_memoria_{tipo_tam}.png",
+            tipo_metrica='memoria'
+        )
+
+
+def criar_grafico_comparativo_barras(dados, variantes, algoritmos, cores, xlabel, ylabel, titulo, caminho_saida, tipo_metrica='tempo'):
+    """
+    Cria um gráfico de barras comparativo.
     
-    # GRÁFICO DE BARRAS
+    Args:
+        dados: Dicionário {variante: [valor_algo1, valor_algo2, valor_algo3]}
+        variantes: Lista de nomes das variantes
+        algoritmos: Lista de nomes dos algoritmos
+        cores: Dicionário {algoritmo: cor}
+        xlabel, ylabel, titulo: Rótulos do gráfico
+        caminho_saida: Caminho para salvar
+        tipo_metrica: 'tempo' ou 'memoria' para formatação adequada
+    """
+    # Remove arquivo existente se houver
+    if os.path.exists(caminho_saida):
+        os.remove(caminho_saida)
+    
+    fig, ax = plt.subplots(figsize=(14, 7))
+    
+    n_variantes = len(variantes)
+    n_algoritmos = len(algoritmos)
+    largura_barra = 0.25
+    
+    indices = np.arange(n_variantes)
+    
+    # Coletar todos os valores para análise
+    todos_valores = []
+    for var in variantes:
+        todos_valores.extend(dados[var])
+    
+    valores_nao_zero = [v for v in todos_valores if v > 0]
+    max_valor = max(valores_nao_zero) if valores_nao_zero else 0
+    min_valor = min(valores_nao_zero) if valores_nao_zero else 0
+    
+    # Plotar barras para cada algoritmo
+    for i, algo in enumerate(algoritmos):
+        valores = [dados[var][i] for var in variantes]
+        offset = (i - 1) * largura_barra
+        
+        # Formatar nome do algoritmo para legenda
+        nome_legenda = algo.replace('_', ' ').title()
+        if 'Poda' in nome_legenda:
+            nome_legenda = 'Backtracking com Poda'
+        
+        ax.bar(indices + offset, valores, largura_barra,
+               label=nome_legenda, color=cores.get(algo, f'C{i}'),
+               alpha=0.85, edgecolor='black', linewidth=1)
+    
+    # Ajustar escala do eixo Y
+    if max_valor > 0:
+        # Define margem superior (10% acima do valor máximo)
+        margem_superior = max_valor * 1.1
+        ax.set_ylim(bottom=0, top=margem_superior)
+        
+        # Usar notação científica se os valores forem muito pequenos OU muito grandes
+        if max_valor < 0.001:
+            ax.ticklabel_format(style='scientific', axis='y', scilimits=(0,0))
+        elif max_valor > 10000:
+            ax.ticklabel_format(style='scientific', axis='y', scilimits=(0,0))
+    else:
+        ax.set_ylim(bottom=0, top=1)
+    
+    # Configurações
+    ax.set_xlabel(xlabel, fontsize=13, fontweight='bold')
+    ax.set_ylabel(ylabel, fontsize=13, fontweight='bold')
+    ax.set_title(titulo, fontsize=15, fontweight='bold', pad=20)
+    ax.set_xticks(indices)
+    ax.set_xticklabels([v.capitalize() for v in variantes], fontsize=11)
+    ax.legend(loc='upper left', fontsize=11, framealpha=0.9)
+    ax.grid(True, alpha=0.3, axis='y', linestyle='--')
+    
+    plt.tight_layout()
+    plt.savefig(caminho_saida, dpi=300, bbox_inches='tight')
+    plt.close()
+    
+    print(f"  ✓ Gráfico comparativo salvo: {os.path.basename(caminho_saida)}")
+
+
+def criar_graficos_individuais(diretorio_resultados, diretorio_graficos, tamanho_inicial, tamanho_final):
+    """
+    Cria gráficos individuais para cada algoritmo.
+    Cada gráfico mostra tempo e memória para cada variante.
+    """
+    algoritmos = ['Guloso', 'Backtracking', 'Backtracking_poda']
+    variantes = ['iguais', 'diferentes', 'parciais', 'aleatorias']
+    tipos_tamanho = [
+        ('tam_igual', 'Strings de Tamanhos Iguais'),
+        ('tam_dif', 'Strings de Tamanhos Diferentes')
+    ]
+    
+    for algo in algoritmos:
+        diretorio_graficos_algo = f"{diretorio_graficos}/{algo}"
+        os.makedirs(diretorio_graficos_algo, exist_ok=True)
+        
+        for tipo_tam, titulo_tam in tipos_tamanho:
+            # Coleta dados para todas as variantes
+            tempos = []
+            memorias = []
+            
+            for variante in variantes:
+                arquivo = f"{diretorio_resultados}/{algo}/{tipo_tam}_strings_{variante}_{tamanho_inicial}_a_{tamanho_final}.txt"
+                tempo_medio, memoria_media = ler_resultados_de_arquivo(arquivo)
+                tempos.append(tempo_medio)
+                memorias.append(memoria_media)
+            
+            # Criar gráfico individual
+            criar_grafico_individual_barras(
+                tempos,
+                memorias,
+                variantes,
+                algo,
+                titulo_tam,
+                f"{diretorio_graficos_algo}/{tipo_tam}.png"
+            )
+
+
+def criar_grafico_individual_barras(tempos, memorias, variantes, algoritmo, titulo_tipo, caminho_saida):
+    """
+    Cria um gráfico individual mostrando tempo e memória para cada variante.
+    
+    Args:
+        tempos: Lista de tempos médios para cada variante
+        memorias: Lista de memórias médias para cada variante
+        variantes: Lista de nomes das variantes
+        algoritmo: Nome do algoritmo
+        titulo_tipo: Tipo de tamanho (iguais ou diferentes)
+        caminho_saida: Caminho para salvar
+    """
+    # Remove arquivo existente se houver
+    if os.path.exists(caminho_saida):
+        os.remove(caminho_saida)
+    
     fig, ax = plt.subplots(figsize=(12, 6))
     
-    x = np.arange(len(tipos_disponiveis))
-    width = 0.35
+    n_variantes = len(variantes)
+    largura_barra = 0.35
+    indices = np.arange(n_variantes)
     
-    bars1 = ax.bar(x - width/2, tempos_pd, width, label='Programação Dinâmica', color='#2ca02c')
-    bars2 = ax.bar(x + width/2, tempos_rec, width, label='Recursivo', color='#ff7f0e')
+    # Analisar valores
+    tempos_nao_zero = [t for t in tempos if t > 0]
+    memorias_nao_zero = [m for m in memorias if m > 0]
     
-    # Adicionar valores nas barras
-    for bar in bars1:
-        height = bar.get_height()
-        ax.text(bar.get_x() + bar.get_width()/2., height,
-                formatar_valor(height), ha='center', va='bottom', fontsize=9)
+    max_tempo = max(tempos_nao_zero) if tempos_nao_zero else 0
+    max_memoria = max(memorias_nao_zero) if memorias_nao_zero else 0
     
-    for bar in bars2:
-        height = bar.get_height()
-        ax.text(bar.get_x() + bar.get_width()/2., height,
-                formatar_valor(height), ha='center', va='bottom', fontsize=9)
+    # Criar eixo secundário para memória
+    ax2 = ax.twinx()
     
-    ax.set_xlabel('Tipo de String', fontsize=12)
-    ax.set_ylabel('Tempo Médio (segundos)', fontsize=12)
-    tipo_label = 'Tamanhos Iguais' if tipo_teste == 'tam_iguais' else 'Tamanhos Diferentes'
-    ax.set_title(f'Comparação de Tempo (Barras) - {tipo_label} ({range_key.replace("_", " ")})', fontsize=14)
-    ax.set_xticks(x)
-    ax.set_xticklabels(rotulos_disponiveis)
-    ax.legend()
-    ax.grid(True, axis='y', alpha=0.3)
+    # Barras de tempo (eixo primário - esquerdo)
+    barras_tempo = ax.bar(indices - largura_barra/2, tempos, largura_barra,
+                          label='Tempo de Execução', color='#3498db',
+                          alpha=0.85, edgecolor='black', linewidth=1)
+    
+    # Barras de memória (eixo secundário - direito)
+    barras_memoria = ax2.bar(indices + largura_barra/2, memorias, largura_barra,
+                            label='Memória Utilizada', color='#e74c3c',
+                            alpha=0.85, edgecolor='black', linewidth=1)
+    
+    # Ajustar escalas com margem superior
+    if max_tempo > 0:
+        ax.set_ylim(bottom=0, top=max_tempo * 1.1)
+        # Notação científica para valores muito pequenos ou muito grandes
+        if max_tempo < 0.001 or max_tempo > 10000:
+            ax.ticklabel_format(style='scientific', axis='y', scilimits=(0,0))
+    else:
+        ax.set_ylim(bottom=0, top=1)
+    
+    if max_memoria > 0:
+        ax2.set_ylim(bottom=0, top=max_memoria * 1.1)
+        # Notação científica para valores muito pequenos ou muito grandes
+        if max_memoria < 0.001 or max_memoria > 10000:
+            ax2.ticklabel_format(style='scientific', axis='y', scilimits=(0,0))
+    else:
+        ax2.set_ylim(bottom=0, top=1)
+    
+    # Configurações eixo primário (Tempo - Esquerdo)
+    ax.set_xlabel('Variantes de Strings', fontsize=12, fontweight='bold')
+    ax.set_ylabel('Tempo Médio de Execução (s)', fontsize=12, fontweight='bold', color='#2874a6')
+    ax.tick_params(axis='y', labelcolor='#2874a6', labelsize=10)
+    ax.set_xticks(indices)
+    ax.set_xticklabels([v.capitalize() for v in variantes], fontsize=10)
+    ax.grid(True, alpha=0.3, axis='y', linestyle='--', color='#3498db')
+    
+    # Configurações eixo secundário (Memória - Direito)
+    ax2.set_ylabel('Memória Média Utilizada (MB)', fontsize=12, fontweight='bold', color='#a93226')
+    ax2.tick_params(axis='y', labelcolor='#a93226', labelsize=10)
+    ax2.grid(False)
+    
+    # Formatar nome do algoritmo
+    nome_algoritmo = algoritmo.replace('_', ' ').title()
+    if 'Poda' in nome_algoritmo:
+        nome_algoritmo = 'Backtracking com Poda'
+    
+    # Título
+    ax.set_title(f'{nome_algoritmo} - {titulo_tipo}', fontsize=14, fontweight='bold', pad=20)
+    
+    # Legenda combinada
+    linhas1, labels1 = ax.get_legend_handles_labels()
+    linhas2, labels2 = ax2.get_legend_handles_labels()
+    ax.legend(linhas1 + linhas2, labels1 + labels2, loc='upper left', fontsize=10, framealpha=0.9)
     
     plt.tight_layout()
-    graficos_dir = os.path.join(diretorio_base, 'Graficos')
-    os.makedirs(graficos_dir, exist_ok=True)
-    save_path = os.path.join(graficos_dir, f'comparacao_tempo_barras_{tipo_teste}_{range_key}.png')
-    plt.savefig(save_path, dpi=200)
+    plt.savefig(caminho_saida, dpi=300, bbox_inches='tight')
     plt.close()
-    print(f"  → {os.path.basename(save_path)}")
     
-    # GRÁFICO DE LINHAS
-    fig, ax = plt.subplots(figsize=(12, 6))
-    
-    ax.plot(rotulos_disponiveis, tempos_pd, marker='o', linewidth=2, markersize=8, 
-            label='Programação Dinâmica', color='#2ca02c')
-    ax.plot(rotulos_disponiveis, tempos_rec, marker='s', linewidth=2, markersize=8,
-            label='Recursivo', color='#ff7f0e')
-    
-    # Adicionar valores nos pontos
-    for i, (rotulo, tempo_pd, tempo_rec) in enumerate(zip(rotulos_disponiveis, tempos_pd, tempos_rec)):
-        ax.annotate(formatar_valor(tempo_pd), (i, tempo_pd), 
-                   textcoords="offset points", xytext=(0,10), ha='center', fontsize=9)
-        ax.annotate(formatar_valor(tempo_rec), (i, tempo_rec),
-                   textcoords="offset points", xytext=(0,-15), ha='center', fontsize=9)
-    
-    ax.set_xlabel('Tipo de String', fontsize=12)
-    ax.set_ylabel('Tempo Médio (segundos)', fontsize=12)
-    ax.set_title(f'Comparação de Tempo (Linhas) - {tipo_label} ({range_key.replace("_", " ")})', fontsize=14)
-    ax.legend()
-    ax.grid(True, alpha=0.3)
-    
-    plt.tight_layout()
-    save_path = os.path.join(graficos_dir, f'comparacao_tempo_linhas_{tipo_teste}_{range_key}.png')
-    plt.savefig(save_path, dpi=200)
-    plt.close()
-    print(f"  → {os.path.basename(save_path)}")
+    print(f"  ✓ Gráfico individual salvo: {nome_algoritmo}/{os.path.basename(caminho_saida)}")
 
-def _gerar_grafico_comparativo_memoria(dados_pd, dados_rec, tipo_teste, range_key, diretorio_base):
-    """Gera gráficos comparativos de memória entre PD e Recursivo (barras e linhas)."""
-    tipos_string = ['iguais', 'diferentes', 'parciais', 'aleatorias']
-    rotulos = ['Iguais', 'Diferentes', 'Parciais', 'Aleatórias']
-    
-    tipos_disponiveis = [t for t in tipos_string if t in dados_pd and t in dados_rec]
-    rotulos_disponiveis = [rotulos[tipos_string.index(t)] for t in tipos_disponiveis]
-    
-    if not tipos_disponiveis:
-        return
-    
-    mems_pd = [dados_pd[t]['memoria'] for t in tipos_disponiveis]
-    mems_rec = [dados_rec[t]['memoria'] for t in tipos_disponiveis]
-    
-    # GRÁFICO DE BARRAS
-    fig, ax = plt.subplots(figsize=(12, 6))
-    
-    x = np.arange(len(tipos_disponiveis))
-    width = 0.35
-    
-    bars1 = ax.bar(x - width/2, mems_pd, width, label='Programação Dinâmica', color='#1f77b4')
-    bars2 = ax.bar(x + width/2, mems_rec, width, label='Recursivo', color='#d62728')
-    
-    # Adicionar valores nas barras
-    for bar in bars1:
-        height = bar.get_height()
-        ax.text(bar.get_x() + bar.get_width()/2., height,
-                formatar_valor(height), ha='center', va='bottom', fontsize=9)
-    
-    for bar in bars2:
-        height = bar.get_height()
-        ax.text(bar.get_x() + bar.get_width()/2., height,
-                formatar_valor(height), ha='center', va='bottom', fontsize=9)
-    
-    ax.set_xlabel('Tipo de String', fontsize=12)
-    ax.set_ylabel('Memória Média (MB)', fontsize=12)
-    tipo_label = 'Tamanhos Iguais' if tipo_teste == 'tam_iguais' else 'Tamanhos Diferentes'
-    ax.set_title(f'Comparação de Memória (Barras) - {tipo_label} ({range_key.replace("_", " ")})', fontsize=14)
-    ax.set_xticks(x)
-    ax.set_xticklabels(rotulos_disponiveis)
-    ax.legend()
-    ax.grid(True, axis='y', alpha=0.3)
-    
-    plt.tight_layout()
-    graficos_dir = os.path.join(diretorio_base, 'Graficos')
-    os.makedirs(graficos_dir, exist_ok=True)
-    save_path = os.path.join(graficos_dir, f'comparacao_memoria_barras_{tipo_teste}_{range_key}.png')
-    plt.savefig(save_path, dpi=200)
-    plt.close()
-    print(f"  → {os.path.basename(save_path)}")
-    
-    # GRÁFICO DE LINHAS
-    fig, ax = plt.subplots(figsize=(12, 6))
-    
-    ax.plot(rotulos_disponiveis, mems_pd, marker='o', linewidth=2, markersize=8,
-            label='Programação Dinâmica', color='#1f77b4')
-    ax.plot(rotulos_disponiveis, mems_rec, marker='s', linewidth=2, markersize=8,
-            label='Recursivo', color='#d62728')
-    
-    # Adicionar valores nos pontos
-    for i, (rotulo, mem_pd, mem_rec) in enumerate(zip(rotulos_disponiveis, mems_pd, mems_rec)):
-        ax.annotate(formatar_valor(mem_pd), (i, mem_pd),
-                   textcoords="offset points", xytext=(0,10), ha='center', fontsize=9)
-        ax.annotate(formatar_valor(mem_rec), (i, mem_rec),
-                   textcoords="offset points", xytext=(0,-15), ha='center', fontsize=9)
-    
-    ax.set_xlabel('Tipo de String', fontsize=12)
-    ax.set_ylabel('Memória Média (MB)', fontsize=12)
-    ax.set_title(f'Comparação de Memória (Linhas) - {tipo_label} ({range_key.replace("_", " ")})', fontsize=14)
-    ax.legend()
-    ax.grid(True, alpha=0.3)
-    
-    plt.tight_layout()
-    save_path = os.path.join(graficos_dir, f'comparacao_memoria_linhas_{tipo_teste}_{range_key}.png')
-    plt.savefig(save_path, dpi=200)
-    plt.close()
-    print(f"  → {os.path.basename(save_path)}")
 
-def gerar_graficos_por_algoritmo(diretorio_base: str):
+def gerar_todos_graficos(diretorio_base, tamanho_inicial, tamanho_final):
     """
-    Gera gráficos separados para cada algoritmo mostrando desempenho
-    para diferentes tipos de strings.
+    Gera todos os gráficos automaticamente.
+    
+    Args:
+        diretorio_base: Diretório base do projeto
+        tamanho_inicial: Tamanho inicial dos testes
+        tamanho_final: Tamanho final dos testes
     """
-    print("\nGerando gráficos por algoritmo...")
+    diretorio_resultados = f"{diretorio_base}/Resultados"
+    diretorio_graficos = f"{diretorio_base}/Graficos"
     
-    for algoritmo in ['Prog_dinamica', 'Recursivo']:
-        print(f"\n  Processando {algoritmo}...")
-        arquivos = listar_arquivos_resultados(diretorio_base, algoritmo)
-        
-        for tipo_teste in ['tam_iguais', 'tam_diferentes']:
-            if tipo_teste not in arquivos:
-                continue
-            
-            for range_key, arquivo in arquivos[tipo_teste].items():
-                dados = extrair_dados_arquivo(arquivo)
-                
-                if not dados:
-                    continue
-                
-                # Gráfico de tempo
-                _gerar_grafico_individual_tempo(dados, algoritmo, tipo_teste, range_key, diretorio_base)
-                
-                # Gráfico de memória
-                _gerar_grafico_individual_memoria(dados, algoritmo, tipo_teste, range_key, diretorio_base)
+    print("\nGerando gráficos...")
     
-    print("\n✓ Gráficos por algoritmo gerados!")
-
-def _gerar_grafico_individual_tempo(dados, algoritmo, tipo_teste, range_key, diretorio_base):
-    """Gera gráfico de tempo para um algoritmo específico."""
-    tipos_string = ['iguais', 'diferentes', 'parciais', 'aleatorias']
-    rotulos = ['Iguais', 'Diferentes', 'Parciais', 'Aleatórias']
-    cores = ['#2ca02c', '#d62728', '#ff7f0e', '#9467bd']
+    # Limpar gráficos existentes
+    print("  Removendo gráficos anteriores...")
+    limpar_graficos_existentes(diretorio_base)
     
-    tipos_disponiveis = [t for t in tipos_string if t in dados]
-    rotulos_disponiveis = [rotulos[tipos_string.index(t)] for t in tipos_disponiveis]
-    cores_disponiveis = [cores[tipos_string.index(t)] for t in tipos_disponiveis]
+    print("\n  Criando gráficos comparativos entre algoritmos...")
+    criar_graficos_comparativos(diretorio_resultados, diretorio_graficos, tamanho_inicial, tamanho_final)
     
-    if not tipos_disponiveis:
-        return
+    print("\n  Criando gráficos individuais para cada algoritmo...")
+    criar_graficos_individuais(diretorio_resultados, diretorio_graficos, tamanho_inicial, tamanho_final)
     
-    fig, ax = plt.subplots(figsize=(10, 6))
-    
-    x = np.arange(len(tipos_disponiveis))
-    tempos = [dados[t]['tempo'] for t in tipos_disponiveis]
-    
-    bars = ax.bar(x, tempos, color=cores_disponiveis, alpha=0.8, edgecolor='black')
-    
-    # Adicionar valores nas barras
-    for bar in bars:
-        height = bar.get_height()
-        ax.text(bar.get_x() + bar.get_width()/2., height,
-                formatar_valor(height), ha='center', va='bottom', fontsize=10, fontweight='bold')
-    
-    ax.set_xlabel('Tipo de String', fontsize=12)
-    ax.set_ylabel('Tempo Médio (segundos)', fontsize=12)
-    tipo_label = 'Tamanhos Iguais' if tipo_teste == 'tam_iguais' else 'Tamanhos Diferentes'
-    alg_label = 'Programação Dinâmica' if algoritmo == 'Prog_dinamica' else 'Recursivo'
-    ax.set_title(f'Desempenho de Tempo - {alg_label}\n{tipo_label} ({range_key.replace("_", " ")})', fontsize=14)
-    ax.set_xticks(x)
-    ax.set_xticklabels(rotulos_disponiveis)
-    ax.grid(True, axis='y', alpha=0.3)
-    
-    plt.tight_layout()
-    graficos_dir = os.path.join(diretorio_base, 'Graficos', algoritmo)
-    os.makedirs(graficos_dir, exist_ok=True)
-    save_path = os.path.join(graficos_dir, f'tempo_{tipo_teste}_{range_key}.png')
-    plt.savefig(save_path, dpi=200)
-    plt.close()
-    print(f"    → {os.path.basename(save_path)}")
-
-def _gerar_grafico_individual_memoria(dados, algoritmo, tipo_teste, range_key, diretorio_base):
-    """Gera gráfico de memória para um algoritmo específico."""
-    tipos_string = ['iguais', 'diferentes', 'parciais', 'aleatorias']
-    rotulos = ['Iguais', 'Diferentes', 'Parciais', 'Aleatórias']
-    cores = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728']
-    
-    tipos_disponiveis = [t for t in tipos_string if t in dados]
-    rotulos_disponiveis = [rotulos[tipos_string.index(t)] for t in tipos_disponiveis]
-    cores_disponiveis = [cores[tipos_string.index(t)] for t in tipos_disponiveis]
-    
-    if not tipos_disponiveis:
-        return
-    
-    fig, ax = plt.subplots(figsize=(10, 6))
-    
-    x = np.arange(len(tipos_disponiveis))
-    memorias = [dados[t]['memoria'] for t in tipos_disponiveis]
-    
-    bars = ax.bar(x, memorias, color=cores_disponiveis, alpha=0.8, edgecolor='black')
-    
-    # Adicionar valores nas barras
-    for bar in bars:
-        height = bar.get_height()
-        ax.text(bar.get_x() + bar.get_width()/2., height,
-                formatar_valor(height), ha='center', va='bottom', fontsize=10, fontweight='bold')
-    
-    ax.set_xlabel('Tipo de String', fontsize=12)
-    ax.set_ylabel('Memória Média (MB)', fontsize=12)
-    tipo_label = 'Tamanhos Iguais' if tipo_teste == 'tam_iguais' else 'Tamanhos Diferentes'
-    alg_label = 'Programação Dinâmica' if algoritmo == 'Prog_dinamica' else 'Recursivo'
-    ax.set_title(f'Desempenho de Memória - {alg_label}\n{tipo_label} ({range_key.replace("_", " ")})', fontsize=14)
-    ax.set_xticks(x)
-    ax.set_xticklabels(rotulos_disponiveis)
-    ax.grid(True, axis='y', alpha=0.3)
-    
-    plt.tight_layout()
-    graficos_dir = os.path.join(diretorio_base, 'Graficos', algoritmo)
-    os.makedirs(graficos_dir, exist_ok=True)
-    save_path = os.path.join(graficos_dir, f'memoria_{tipo_teste}_{range_key}.png')
-    plt.savefig(save_path, dpi=200)
-    plt.close()
-    print(f"    → {os.path.basename(save_path)}")
-
-def gerar_todos_graficos(diretorio_base: str = None):
-    """
-    Função principal que gera todos os gráficos e tabelas.
-    """
-    if diretorio_base is None:
-        diretorio_base = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    
-    print("="*60)
-    print("GERADOR DE GRÁFICOS - TRABALHO 2")
-    print("Análise de Distância de Edição")
-    print("="*60)
-    
-    # Verificar se o diretório de resultados existe
-    resultados_dir = os.path.join(diretorio_base, 'Resultados')
-    if not os.path.exists(resultados_dir):
-        print(f"Erro: Diretório de resultados não encontrado: {resultados_dir}")
-        return
-    
-    try:
-        gerar_grafico_comparativo_algoritmos(diretorio_base)
-        gerar_graficos_por_algoritmo(diretorio_base)
-        
-        print("\n" + "="*60)
-        print("✓ TODOS OS GRÁFICOS FORAM GERADOS COM SUCESSO!")
-        print("="*60)
-        
-    except Exception as e:
-        print(f"\n✗ Erro durante a geração dos gráficos: {e}")
-        import traceback
-        traceback.print_exc()
-
-if __name__ == "__main__":
-    gerar_todos_graficos()
+    print("\n✓ Todos os gráficos foram gerados com sucesso!\n")

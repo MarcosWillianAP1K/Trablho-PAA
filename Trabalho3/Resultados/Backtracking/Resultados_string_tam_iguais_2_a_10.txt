@@ -4,13 +4,13 @@ Executado 9 vezes para cada teste: (Segundos e MB)
 
 --------------------------------
 
-Tempo medio strings iguais: 1.0866666949974993e-05
+Tempo medio strings iguais: 1.6233333250662934e-05
 Memoria media gasta strings iguais: 1.3969838619232178e-09
-Tempo medio strings diferentes: 0.7774546555550236
+Tempo medio strings diferentes: 1.0158473777777948
 Memoria media gasta strings diferentes: 1.4770193956792355e-09
-Tempo medio strings parciais: 0.00030822222207562946
+Tempo medio strings parciais: 0.00029287777821688604
 Memoria media gasta strings parciais: 1.4770193956792355e-09
-Tempo medio strings aleatorias: 0.6802724222220099
+Tempo medio strings aleatorias: 0.895896422222399
 Memoria media gasta strings aleatorias: 1.4770193956792355e-09
 
 --------------------------------
