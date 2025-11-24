@@ -5,18 +5,18 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
 import setup_path #configura o path automaticamente
-DIRETORIO_BASE = setup_path.configurar_path("Trabalho2")
+DIRETORIO_BASE = setup_path.configurar_path("Trabalho3")
 TAMANHO_INICIAL = 2
 TAMANHO_FINAL = 10
 NUMERO_DE_VEZES_EXECUTAR = 1
 
 
     
-import Trabalho2.Auxiliar.gerador_testes_resultados as gerador
-import Trabalho2.Auxiliar.Cronometro as cronometro
-import Trabalho2.Auxiliar.Medidor_memoria as medidor
-# import Trabalho2.Auxiliar.gerador_graficos as graficos
-import Trabalho2.Algortimo.Distancia_de_edicao as algos
+import Trabalho3.Auxiliar.gerador_testes_resultados as gerador
+import Trabalho3.Auxiliar.Cronometro as cronometro
+import Trabalho3.Auxiliar.Medidor_memoria as medidor
+# import Trabalho3.Auxiliar.gerador_graficos as graficos
+import Trabalho3.Algortimo.Distancia_de_edicao as algos
 
 def gerar_testes():
     print("Gerando arquivos de teste...")
