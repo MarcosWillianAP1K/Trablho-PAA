@@ -1,0 +1,16 @@
+Resultados para strings de tamanhos iguais de 2 a 10
+Executado 9 vezes para cada teste: (Segundos e MB)
+
+
+--------------------------------
+
+Tempo medio strings iguais: 0.00017956044444468312
+Memoria media gasta strings iguais: 0.001185946994357639
+Tempo medio strings diferentes: 0.00011199888881997645
+Memoria media gasta strings diferentes: 0.001185946994357639
+Tempo medio strings parciais: 0.00022414522188935534
+Memoria media gasta strings parciais: 0.001185946994357639
+Tempo medio strings aleatorias: 8.725755540379194e-05
+Memoria media gasta strings aleatorias: 0.001185946994357639
+
+--------------------------------
