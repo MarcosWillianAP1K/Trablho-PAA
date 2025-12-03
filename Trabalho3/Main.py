@@ -7,7 +7,7 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 import setup_path #configura o path automaticamente
 DIRETORIO_BASE = setup_path.configurar_path("Trabalho3")
 TAMANHO_INICIAL = 2
-TAMANHO_FINAL = 10
+TAMANHO_FINAL = 12
 NUMERO_DE_VEZES_EXECUTAR = 1
 
 
