@@ -3,6 +3,19 @@ import re
 import os
 import numpy as np
 
+# Constantes globais
+ALGORITMOS = ['Guloso', 'Backtracking', 'Backtracking_poda']
+VARIANTES = ['iguais', 'diferentes', 'parciais', 'aleatorias']
+TIPOS_TAMANHO = [
+    ('tam_iguais', 'Strings de Tamanhos Iguais'),
+    ('tam_diferentes', 'Strings de Tamanhos Diferentes')
+]
+CORES_ALGORITMOS = {
+    'Guloso': '#2ecc71',
+    'Backtracking': '#e74c3c',
+    'Backtracking_poda': '#3498db'
+}
+
 
 def limpar_graficos_existentes(diretorio_base):
     """
@@ -21,9 +34,7 @@ def limpar_graficos_existentes(diretorio_base):
         print("  ✓ Gráficos comparativos anteriores removidos")
     
     # Limpar pastas de gráficos individuais
-    algoritmos = ['Guloso', 'Backtracking', 'Backtracking_poda']
-    
-    for algo in algoritmos:
+    for algo in ALGORITMOS:
         diretorio_graficos_algo = f"{diretorio_graficos}/{algo}"
         if os.path.exists(diretorio_graficos_algo):
             for arquivo in os.listdir(diretorio_graficos_algo):
@@ -42,6 +53,8 @@ def ler_resultados_de_arquivo(caminho_arquivo):
     Returns:
         Tupla (tempo_medio, memoria_media)
     """
+    
+    
     if not os.path.exists(caminho_arquivo):
         return 0.0, 0.0
     
@@ -76,37 +89,35 @@ def criar_graficos_comparativos(diretorio_resultados, diretorio_graficos, tamanh
     """
     os.makedirs(diretorio_graficos, exist_ok=True)
     
-    algoritmos = ['Guloso', 'Backtracking', 'Backtracking_poda']
-    variantes = ['iguais', 'diferentes', 'parciais', 'aleatorias']
-    tipos_tamanho = [
-        ('tam_igual', 'Strings de Tamanhos Iguais'),
-        ('tam_dif', 'Strings de Tamanhos Diferentes')
-    ]
-    
-    cores = {
-        'Guloso': '#2ecc71',
-        'Backtracking': '#e74c3c',
-        'Backtracking_poda': '#3498db'
-    }
-    
-    for tipo_tam, titulo_tam in tipos_tamanho:
+    for tipo_tam, titulo_tam in TIPOS_TAMANHO:
         # Coleta dados para todas as variantes e algoritmos
-        dados_tempo = {var: [] for var in variantes}
-        dados_memoria = {var: [] for var in variantes}
+        dados_tempo = {var: [] for var in VARIANTES}
+        dados_memoria = {var: [] for var in VARIANTES}
         
-        for variante in variantes:
-            for algo in algoritmos:
-                arquivo = f"{diretorio_resultados}/{algo}/{tipo_tam}_strings_{variante}_{tamanho_inicial}_a_{tamanho_final}.txt"
+        # Para cada algoritmo, coletar dados de TODAS as variantes
+        for algo in ALGORITMOS:
+            # Vetores temporários para armazenar dados deste algoritmo
+            tempos_algo = []
+            memorias_algo = []
+            
+            # Ler dados de cada variante
+            for variante in VARIANTES:
+                arquivo = f"{diretorio_resultados}/{algo}/Resultados_string_{tipo_tam}_{tamanho_inicial}_a_{tamanho_final}.txt"
                 tempo_medio, memoria_media = ler_resultados_de_arquivo(arquivo)
-                dados_tempo[variante].append(tempo_medio)
-                dados_memoria[variante].append(memoria_media)
+                tempos_algo.append(tempo_medio)
+                memorias_algo.append(memoria_media)
+            
+            # Armazenar no dicionário: cada variante recebe o valor correspondente deste algoritmo
+            for i, variante in enumerate(VARIANTES):
+                dados_tempo[variante].append(tempos_algo[i])
+                dados_memoria[variante].append(memorias_algo[i])
         
         # Gráfico de Tempo
         criar_grafico_comparativo_barras(
             dados_tempo,
-            variantes,
-            algoritmos,
-            cores,
+            VARIANTES,
+            ALGORITMOS,
+            CORES_ALGORITMOS,
             'Variantes de Strings',
             'Tempo Médio de Execução (s)',
             f'Comparação de Tempo - {titulo_tam}',
@@ -117,9 +128,9 @@ def criar_graficos_comparativos(diretorio_resultados, diretorio_graficos, tamanh
         # Gráfico de Memória
         criar_grafico_comparativo_barras(
             dados_memoria,
-            variantes,
-            algoritmos,
-            cores,
+            VARIANTES,
+            ALGORITMOS,
+            CORES_ALGORITMOS,
             'Variantes de Strings',
             'Memória Média Utilizada (MB)',
             f'Comparação de Memória - {titulo_tam}',
@@ -211,24 +222,17 @@ def criar_graficos_individuais(diretorio_resultados, diretorio_graficos, tamanho
     Cria gráficos individuais para cada algoritmo.
     Cada gráfico mostra tempo e memória para cada variante.
     """
-    algoritmos = ['Guloso', 'Backtracking', 'Backtracking_poda']
-    variantes = ['iguais', 'diferentes', 'parciais', 'aleatorias']
-    tipos_tamanho = [
-        ('tam_igual', 'Strings de Tamanhos Iguais'),
-        ('tam_dif', 'Strings de Tamanhos Diferentes')
-    ]
-    
-    for algo in algoritmos:
+    for algo in ALGORITMOS:
         diretorio_graficos_algo = f"{diretorio_graficos}/{algo}"
         os.makedirs(diretorio_graficos_algo, exist_ok=True)
         
-        for tipo_tam, titulo_tam in tipos_tamanho:
+        for tipo_tam, titulo_tam in TIPOS_TAMANHO:
             # Coleta dados para todas as variantes
             tempos = []
             memorias = []
             
-            for variante in variantes:
-                arquivo = f"{diretorio_resultados}/{algo}/{tipo_tam}_strings_{variante}_{tamanho_inicial}_a_{tamanho_final}.txt"
+            for variante in VARIANTES:
+                arquivo = f"{diretorio_resultados}/{algo}/Resultados_string_{tipo_tam}_{tamanho_inicial}_a_{tamanho_final}.txt"
                 tempo_medio, memoria_media = ler_resultados_de_arquivo(arquivo)
                 tempos.append(tempo_medio)
                 memorias.append(memoria_media)
@@ -237,7 +241,7 @@ def criar_graficos_individuais(diretorio_resultados, diretorio_graficos, tamanho
             criar_grafico_individual_barras(
                 tempos,
                 memorias,
-                variantes,
+                VARIANTES,
                 algo,
                 titulo_tam,
                 f"{diretorio_graficos_algo}/{tipo_tam}.png"
@@ -345,6 +349,7 @@ def gerar_todos_graficos(diretorio_base, tamanho_inicial, tamanho_final):
         tamanho_inicial: Tamanho inicial dos testes
         tamanho_final: Tamanho final dos testes
     """
+
     diretorio_resultados = f"{diretorio_base}/Resultados"
     diretorio_graficos = f"{diretorio_base}/Graficos"
     
