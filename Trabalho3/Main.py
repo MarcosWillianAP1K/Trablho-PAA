@@ -290,10 +290,10 @@ def executar_testes_backtracking_poda():
 
 if __name__ == "__main__":
     
-    # gerar_testes()
-    # executar_testes_guloso()
-    # executar_testes_backtracking()
-    # executar_testes_backtracking_poda()
+    gerar_testes()
+    executar_testes_guloso()
+    executar_testes_backtracking()
+    executar_testes_backtracking_poda()
     
     # Gerar gráficos
     graficos.gerar_todos_graficos(DIRETORIO_BASE, TAMANHO_INICIAL, TAMANHO_FINAL)
